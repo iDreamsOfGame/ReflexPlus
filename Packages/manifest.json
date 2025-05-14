@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "com.unity.ide.rider": "3.0.36",
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.unity.test-framework": "2.0.1-pre.18",
+    "com.unity.ugui": "1.0.0",
+    "com.unity.modules.animation": "1.0.0",
+    "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.particlesystem": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.ui": "1.0.0",
+    "com.gamesoft.zenject": "9.2.2",
+    "jp.hadashikick.vcontainer": "1.16.8"
+  },
+  "scopedRegistries": [
+    {
+      "name": "package.openupm.com",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.gamesoft.zenject",
+        "jp.hadashikick.vcontainer"
+      ]
+    }
+  ]
+}
