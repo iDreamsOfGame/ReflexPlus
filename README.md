@@ -138,10 +138,10 @@ using UnityEngine;
 
 public class GreetInstaller : MonoBehaviour, IInstaller
 {
-    public void InstallBindings(ContainerBuilder builder)
-    {
-        builder.AddSingleton("World");
-    }
+  public void InstallBindings(ContainerBuilder builder)
+  {
+    builder.AddSingleton("World");
+  }
 }
 ```
 16. Add `GreetInstaller.cs` to `Greet.unity` `SceneScope`
@@ -155,19 +155,19 @@ using UnityEngine.SceneManagement;
 
 public class Loader : MonoBehaviour
 {
-    private void Start()
-    {
-      // If you are loading scenes without addressables
-      var scene = SceneManager.LoadScene("Greet", new LoadSceneParameters(LoadSceneMode.Single));
-      ReflexSceneManager.PreInstallScene(scene, builder => builder.AddSingleton("Beautiful"));
+  private void Start()
+  {
+    // If you are loading scenes without addressables
+    var scene = SceneManager.LoadScene("Greet", new LoadSceneParameters(LoadSceneMode.Single));
+    ReflexSceneManager.PreInstallScene(scene, builder => builder.AddSingleton("Beautiful"));
 
-      // If you are loading scenes with addressables
-      Addressables.LoadSceneAsync("Greet", activateOnLoad: false).Completed += handle =>
-      {
-        ReflexSceneManager.PreInstallScene(handle.Result.Scene, builder => builder.AddSingleton("Beautiful"));
-        handle.Result.ActivateAsync();
-      };
-    }
+    // If you are loading scenes with addressables
+    Addressables.LoadSceneAsync("Greet", activateOnLoad: false).Completed += handle =>
+    {
+      ReflexSceneManager.PreInstallScene(handle.Result.Scene, builder => builder.AddSingleton("Beautiful"));
+      handle.Result.ActivateAsync();
+    };
+  }
 }
 ```
 20. Assign it to any gameobject at `Boot` scene
@@ -383,41 +383,41 @@ You can use it to inject fields, writeable properties and methods like following
 ```csharp
 class Foo : MonoBehaviour  
 {  
-	[Inject]
-	private readonly IInputManager inputManager;
-	
-	[Inject(true)]
-	private readonly ISoundManager soundManager;
-	
-	[Inject("actors")]
-	private readonly IActorManager actorManager;
-	
-	[Inject]
-	public IEnumerable<IManager> Managers { get; private set; }
-	
-	[Inject(true)]
-	public ISoundManager SoundManager { get; private set; }
-	
-	[Inject("actors")]
-	public IActorManager ActorManager { get; private set; }
-	
-	[Inject]
-	private void Inject(IEnumerable<int> numbers) // Method name here does not matter  
-	{  
-	  ...
-	}
-  
-	[Inject(true)]
-	private void Inject(ISoundManager manager)
-	{
-	  ...
-	}
-	
-	[Inject("actors")]
-	private void Inject(IActorManager manager)
-	{
-	  ...
-	}
+  [Inject]
+  private readonly IInputManager inputManager;
+
+  [Inject(true)]
+  private readonly ISoundManager soundManager;
+
+  [Inject("actors")]
+  private readonly IActorManager actorManager;
+
+  [Inject]
+  public IEnumerable<IManager> Managers { get; private set; }
+
+  [Inject(true)]
+  public ISoundManager SoundManager { get; private set; }
+
+  [Inject("actors")]
+  public IActorManager ActorManager { get; private set; }
+
+  [Inject]
+  private void Inject(IEnumerable<int> numbers) // Method name here does not matter  
+  {  
+    ...
+  }
+
+  [Inject(true)]
+  private void Inject(ISoundManager manager)
+  {
+    ...
+  }
+
+  [Inject("actors")]
+  private void Inject(IActorManager manager)
+  {
+    ...
+  }
 }
 ```
 > Note that attribute injection also works on non-mono classes.
@@ -437,13 +437,13 @@ Example:
 ```csharp
 private void Documentation_Bindings()  
 {
-	var container = new ContainerBuilder()
-		.AddSingleton(1)
-		.AddSingleton(2)
-		.AddSingleton(3)
-		.Build();
+  var container = new ContainerBuilder()
+    .AddSingleton(1)
+    .AddSingleton(2)
+    .AddSingleton(3)
+    .Build();
 
-	Debug.Log(string.Join(", ", container.All<int>())); // Prints: 1, 2, 3
+  Debug.Log(string.Join(", ", container.All<int>())); // Prints: 1, 2, 3
 }
 ```
 
@@ -461,41 +461,41 @@ Should be used to inject fields, writeable properties and methods like following
 ```csharp
 class Foo : MonoBehaviour  
 {  
-	[Inject]
-	private readonly IInputManager inputManager;
-	
-	[Inject(true)]
-	private readonly ISoundManager soundManager;
-	
-	[Inject("actors")]
-	private readonly IActorManager actorManager;
-	
-	[Inject]
-	public IEnumerable<IManager> Managers { get; private set; }
-	
-	[Inject(true)]
-	public ISoundManager SoundManager { get; private set; }
-	
-	[Inject("actors")]
-	public IActorManager ActorManager { get; private set; }
-	
-	[Inject]
-	private void Inject(IEnumerable<int> numbers) // Method name here does not matter  
-	{  
-	  ...
-	}
-  
-	[Inject(true)]
-	private void Inject(ISoundManager manager)
-	{
-	  ...
-	}
-	
-	[Inject("actors")]
-	private void Inject(IActorManager manager)
-	{
-	  ...
-	}
+  [Inject]
+  private readonly IInputManager inputManager;
+
+  [Inject(true)]
+  private readonly ISoundManager soundManager;
+
+  [Inject("actors")]
+  private readonly IActorManager actorManager;
+
+  [Inject]
+  public IEnumerable<IManager> Managers { get; private set; }
+
+  [Inject(true)]
+  public ISoundManager SoundManager { get; private set; }
+
+  [Inject("actors")]
+  public IActorManager ActorManager { get; private set; }
+
+  [Inject]
+  private void Inject(IEnumerable<int> numbers) // Method name here does not matter  
+  {  
+    ...
+  }
+
+  [Inject(true)]
+  private void Inject(ISoundManager manager)
+  {
+    ...
+  }
+
+  [Inject("actors")]
+  private void Inject(IActorManager manager)
+  {
+    ...
+  }
 }
 ```
 > Note that `InjectAttribute` also works on non-mono classes.
@@ -652,7 +652,7 @@ class NumberManager
     {
         Numbers = numbers;
     }
-    
+
     // https://docs.unity3d.com/Manual/ScriptingRestrictions.html
     [Preserve] private static void UsedOnlyForAOTCodeGeneration()
     {
