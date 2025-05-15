@@ -366,12 +366,12 @@ It's simply as just requesting the contracts you need as following example:
 ```csharp
 private class Foo
 {  
-	...
-  
-	public Foo(IInputManager inputManager, IEnumerable<IManager> managers)  
-	{  
-		...
-	}  
+  ...
+
+    public Foo(IInputManager inputManager, IEnumerable<IManager> managers)  
+  {  
+    ...
+  }  
 }
 ```
 
