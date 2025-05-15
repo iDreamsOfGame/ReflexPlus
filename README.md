@@ -97,10 +97,10 @@ using UnityEngine;
 
 public class ProjectInstaller : MonoBehaviour, IInstaller
 {
-    public void InstallBindings(ContainerBuilder builder)
-    {
-        builder.AddSingleton("Hello");
-    }
+  public void InstallBindings(ContainerBuilder builder)
+  {
+    builder.AddSingleton("Hello");
+  }
 }
 ```
 3. In unity project window
@@ -120,13 +120,13 @@ using ReflexPlus.Attributes;
 
 public class Greeter : MonoBehaviour
 {
-    [Inject] 
-  	private readonly IEnumerable<string> strings;
+  [Inject] 
+  private readonly IEnumerable<string> strings;
 
-    private void Start()
-    {
-        Debug.Log(string.Join(" ", strings));
-    }
+  private void Start()
+  {
+    Debug.Log(string.Join(" ", strings));
+  }
 }
 ```
 13. Add `Greeter.cs` to any gameobject in `Greet` scene
