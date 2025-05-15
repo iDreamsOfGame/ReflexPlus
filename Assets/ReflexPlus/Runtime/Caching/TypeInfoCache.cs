@@ -46,8 +46,8 @@ namespace ReflexPlus.Caching
                 var injectableFields = new List<InjectableFieldInfo>();
                 foreach (var field in fields)
                 {
-                    var attribute = field.GetCustomAttribute<InjectAttribute>();
-                    var injectableField = new InjectableFieldInfo(attribute.Name, field, attribute.Optional);
+                    var injectAttribute = field.GetCustomAttribute<InjectAttribute>();
+                    var injectableField = new InjectableFieldInfo(injectAttribute.Name, field, injectAttribute.Optional);
                     injectableFields.Add(injectableField);
                 }
 
@@ -56,8 +56,8 @@ namespace ReflexPlus.Caching
                 var injectableProperties = new List<InjectablePropertyInfo>();
                 foreach (var property in properties)
                 {
-                    var attribute = property.GetCustomAttribute<InjectAttribute>();
-                    var injectableProperty = new InjectablePropertyInfo(attribute.Name, property, attribute.Optional);
+                    var injectAttribute = property.GetCustomAttribute<InjectAttribute>();
+                    var injectableProperty = new InjectablePropertyInfo(injectAttribute.Name, property, injectAttribute.Optional);
                     injectableProperties.Add(injectableProperty);
                 }
 
@@ -66,8 +66,8 @@ namespace ReflexPlus.Caching
                 var injectableMethods = new List<InjectableMethodInfo>();
                 foreach (var method in methods)
                 {
-                    var attribute = method.GetCustomAttribute<InjectAttribute>();
-                    var injectableMethod = new InjectableMethodInfo(attribute.Names, method, attribute.Optional);
+                    var injectAttribute = method.GetCustomAttribute<InjectAttribute>();
+                    var injectableMethod = new InjectableMethodInfo(injectAttribute.Names, method, injectAttribute.Optional);
                     injectableMethods.Add(injectableMethod);
                 }
 

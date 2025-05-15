@@ -7,6 +7,6 @@
   "keywords": ["Dependency Injection", "IoC", "DI", "DI Container"],
   "license": "MIT",
   "documentationUrl": "https://github.com/iDreamsOfGame/ReflexPlus",
-  "changelogUrl": "https://github.com/iDreamsOfGame/ReflexPlus/releases",
+  "changelogUrl": "https://github.com/iDreamsOfGame/ReflexPlus/blob/main/CHANGELOG.md",
   "licensesUrl": "https://github.com/iDreamsOfGame/ReflexPlus/blob/main/LICENSE"
 }

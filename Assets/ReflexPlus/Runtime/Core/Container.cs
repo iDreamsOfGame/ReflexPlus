@@ -66,16 +66,16 @@ namespace ReflexPlus.Core
             var scoped = builder.Build();
             return scoped;
         }
+        
+        public T Construct<T>(object attributeKey = null) => (T)Construct(typeof(T), attributeKey);
 
-        public T Construct<T>(object key = null)
-        {
-            return (T)Construct(typeof(T), key);
-        }
-
-        public object Construct(Type concrete, object key = null)
+        public object Construct(Type concrete, object attributeKey = null)
         {
             var instance = ConstructorInjector.Construct(concrete, this);
-            AttributeInjector.Inject(instance, key, this);
+            if (instance == null)
+                return null;
+            
+            AttributeInjector.InjectInto(instance, attributeKey, this);
             return instance;
         }
 

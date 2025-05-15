@@ -15,6 +15,9 @@ namespace ReflexPlus.Injectors
         public static object Construct(Type concrete, Container container)
         {
             var info = TypeConstructionInfoCache.Get(concrete);
+            var optional = info.Optional;
+            var parameterKeys = info.ParameterKeys ?? Array.Empty<object>();
+            var parameterKeysLength = parameterKeys.Length;
             var constructorParameters = info.ConstructorParameters;
             var constructorParametersLength = info.ConstructorParameters.Length;
             var arguments = ArrayPool.Rent(constructorParametersLength);
@@ -23,14 +26,18 @@ namespace ReflexPlus.Injectors
             {
                 for (var i = 0; i < constructorParametersLength; i++)
                 {
-                    arguments[i] = container.Resolve(constructorParameters[i]);
+                    var parameterKey = i < parameterKeysLength ? parameterKeys[i] : null;
+                    arguments[i] = container.Resolve(constructorParameters[i], optional, parameterKey);
                 }
 
                 return info.ObjectActivator.Invoke(arguments);
             }
             catch (Exception exception)
             {
-                throw new ConstructorInjectorException(concrete, exception, constructorParameters);
+                if (!info.Optional) 
+                    throw new ConstructorInjectorException(concrete, exception, constructorParameters);
+
+                return null;
             }
             finally
             {
@@ -48,7 +55,10 @@ namespace ReflexPlus.Injectors
             }
             catch (Exception exception)
             {
-                throw new ConstructorInjectorException(concrete, exception, info.ConstructorParameters);
+                if (!info.Optional)
+                    throw new ConstructorInjectorException(concrete, exception, info.ConstructorParameters);
+
+                return null;
             }
         }
     }

@@ -7,6 +7,8 @@ namespace ReflexPlus.Extensions
 {
     internal static class TypeExtensions
     {
+        private const BindingFlags ConstructorsBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+        
         internal static bool IsEnumerable(this Type type, out Type elementType)
         {
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
@@ -21,7 +23,7 @@ namespace ReflexPlus.Extensions
 
         internal static bool TryGetConstructors(this Type type, out ConstructorInfo[] constructors)
         {
-            constructors = type.GetConstructors();
+            constructors = type.GetConstructors(ConstructorsBindingFlags);
             return constructors.Length > 0;
         }
 

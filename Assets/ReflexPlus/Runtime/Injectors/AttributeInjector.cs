@@ -6,15 +6,15 @@ namespace ReflexPlus.Injectors
 {
     public static class AttributeInjector
     {
-        public static void Inject(object obj, object key, Container container)
+        public static void InjectInto(object obj, object key, Container container)
         {
             var info = TypeInfoCache.Get(obj.GetType(), key);
-            InjectIntoFields(info.InjectableFields, obj, container);
-            InjectIntoProperties(info.InjectableProperties, obj, container);
-            InjectIntoMethods(info.InjectableMethods, obj, container);
+            InjectFields(info.InjectableFields, obj, container);
+            InjectProperties(info.InjectableProperties, obj, container);
+            InjectMethods(info.InjectableMethods, obj, container);
         }
 
-        private static void InjectIntoFields(InjectableFieldInfo[] injectableFields, object obj, Container container)
+        private static void InjectFields(InjectableFieldInfo[] injectableFields, object obj, Container container)
         {
             var fieldCount = injectableFields.Length;
             for (var i = 0; i < fieldCount; i++)
@@ -27,7 +27,7 @@ namespace ReflexPlus.Injectors
             }
         }
         
-        private static void InjectIntoProperties(InjectablePropertyInfo[] injectableProperties, object obj, Container container)
+        private static void InjectProperties(InjectablePropertyInfo[] injectableProperties, object obj, Container container)
         {
             var propertyCount = injectableProperties.Length;
             for (var i = 0; i < propertyCount; i++)
@@ -40,7 +40,7 @@ namespace ReflexPlus.Injectors
             }
         }
 
-        private static void InjectIntoMethods(InjectableMethodInfo[] injectableMethods, object obj, Container container)
+        private static void InjectMethods(InjectableMethodInfo[] injectableMethods, object obj, Container container)
         {
             var methodCount = injectableMethods.Length;
             for (var i = 0; i < methodCount; i++)

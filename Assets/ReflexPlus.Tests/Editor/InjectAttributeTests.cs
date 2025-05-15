@@ -8,7 +8,7 @@ using ReflexPlus.Exceptions;
 
 namespace ReflexPlus.EditModeTests
 {
-    internal class AttributeInjectorTests
+    internal class InjectAttributeTests
     {
         private class Foo
         {

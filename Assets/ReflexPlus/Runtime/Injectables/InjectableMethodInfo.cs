@@ -4,15 +4,15 @@ namespace ReflexPlus.Injectables
 {
     public readonly struct InjectableMethodInfo
     {
-        public InjectableMethodInfo(object[] keys, MethodInfo methodInfo, bool optional)
+        public InjectableMethodInfo(object[] parameterKeys, MethodInfo methodInfo, bool optional)
         {
-            Keys = keys;
+            ParameterKeys = parameterKeys;
             MethodInfo = methodInfo;
             Parameters = methodInfo.GetParameters();
             Optional = optional;
         }
 
-        public object[] Keys { get; }
+        public object[] ParameterKeys { get; }
 
         public MethodInfo MethodInfo { get; }
 

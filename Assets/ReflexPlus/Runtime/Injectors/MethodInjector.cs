@@ -15,8 +15,8 @@ namespace ReflexPlus.Injectors
         internal static void Inject(InjectableMethodInfo method, object instance, Container container)
         {
             var optional = method.Optional;
-            var keys = method.Keys ?? Array.Empty<object>();
-            var keysLength = keys.Length;
+            var parameterKeys = method.ParameterKeys ?? Array.Empty<object>();
+            var parameterKeysLength = parameterKeys.Length;
             var methodParameters = method.Parameters;
             var methodParametersLength = methodParameters.Length;
             var arguments = ArrayPool.Rent(methodParametersLength);
@@ -25,8 +25,8 @@ namespace ReflexPlus.Injectors
             {
                 for (var i = 0; i < methodParametersLength; i++)
                 {
-                    var key = i < keysLength ? keys[i] : null;
-                    arguments[i] = container.Resolve(methodParameters[i].ParameterType, optional, key);
+                    var parameterKey = i < parameterKeysLength ? parameterKeys[i] : null;
+                    arguments[i] = container.Resolve(methodParameters[i].ParameterType, optional, parameterKey);
                 }
 
                 method.MethodInfo.Invoke(instance, arguments);
