@@ -6,6 +6,11 @@ namespace ReflexPlus.Injectors
 {
     public static class AttributeInjector
     {
+        public static void InjectInto(object obj, Container container)
+        {
+            InjectInto(obj, null, container);
+        }
+        
         public static void InjectInto(object obj, object key, Container container)
         {
             var info = TypeInfoCache.Get(obj.GetType(), key);

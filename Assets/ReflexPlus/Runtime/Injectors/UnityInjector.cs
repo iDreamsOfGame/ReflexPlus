@@ -30,13 +30,10 @@ namespace ReflexPlus.Injectors
             ResetStaticState();
             RootContainer = CreateRootContainer();
 
-            void InjectScene(Scene scene, ContainerScope containerScope)
-            {
-                ReflexPlusLogger.Log($"Scene {scene.name} ({scene.GetHashCode()}) loaded", LogLevel.Development);
-                var sceneContainer = CreateSceneContainer(scene, RootContainer, containerScope);
-                ContainersPerScene.Add(scene, sceneContainer);
-                SceneInjector.Inject(scene, sceneContainer);
-            }
+            OnSceneLoaded += InjectScene;
+            SceneManager.sceneUnloaded += DisposeScene;
+            Application.quitting += DisposeProject;
+            return;
 
             void DisposeScene(Scene scene)
             {
@@ -59,9 +56,13 @@ namespace ReflexPlus.Injectors
                 Application.quitting -= DisposeProject;
             }
 
-            OnSceneLoaded += InjectScene;
-            SceneManager.sceneUnloaded += DisposeScene;
-            Application.quitting += DisposeProject;
+            void InjectScene(Scene scene, ContainerScope containerScope)
+            {
+                ReflexPlusLogger.Log($"Scene {scene.name} ({scene.GetHashCode()}) loaded", LogLevel.Development);
+                var sceneContainer = CreateSceneContainer(scene, RootContainer, containerScope);
+                ContainersPerScene.Add(scene, sceneContainer);
+                SceneInjector.Inject(scene, sceneContainer);
+            }
         }
 
         private static Container CreateRootContainer()

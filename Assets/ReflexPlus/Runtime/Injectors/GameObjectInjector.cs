@@ -13,7 +13,7 @@ namespace ReflexPlus.Injectors
         {
             if (gameObject.TryGetComponent<MonoBehaviour>(out var monoBehaviour))
             {
-                AttributeInjector.InjectInto(monoBehaviour, null, container);
+                AttributeInjector.InjectInto(monoBehaviour, container);
             }
         }
 
@@ -26,7 +26,7 @@ namespace ReflexPlus.Injectors
             {
                 var monoBehaviour = monoBehaviours[i];
                 if (monoBehaviour)
-                    AttributeInjector.InjectInto(monoBehaviour, null, container);
+                    AttributeInjector.InjectInto(monoBehaviour, container);
             }
         }
 
@@ -39,7 +39,7 @@ namespace ReflexPlus.Injectors
             {
                 var monoBehaviour = monoBehaviours[i];
                 if (monoBehaviour)
-                    AttributeInjector.InjectInto(monoBehaviour, null, container);
+                    AttributeInjector.InjectInto(monoBehaviour, container);
             }
         }
 
@@ -55,7 +55,7 @@ namespace ReflexPlus.Injectors
                 {
                     var monoBehaviour = monoBehaviours[j];
                     if (monoBehaviour)
-                        AttributeInjector.InjectInto(monoBehaviour, null, container);
+                        AttributeInjector.InjectInto(monoBehaviour, container);
                 }
             }
         }

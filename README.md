@@ -1,19 +1,15 @@
 <div align=center>   
-
 <p align="center">
-  <img src="Graphics\logo.png" width="250">
+  <img src="Graphics\logo.png" width="500">
 </p>
+
 
 ### Blazing fast, minimal but complete dependency injection library for <a href="https://unity.com/">Unity</a>
 
-Reflex is an [Dependency Injection](https://stackify.com/dependency-injection/) framework for [Unity](https://unity.com/). Making your classes independent of its dependencies, granting better separation of concerns. It achieves that by decoupling the usage of an object from its creation. This helps you to follow SOLID’s dependency inversion and single responsibility principles. Making your project more **readable, testable and scalable.**
+Reflex+ is an [Dependency Injection](https://stackify.com/dependency-injection/) framework for [Unity](https://unity.com/) based on framework [Reflex](https://github.com/gustavopsantos/Reflex/). Making your classes independent of its dependencies, granting better separation of concerns. It achieves that by decoupling the usage of an object from its creation. This helps you to follow SOLID’s dependency inversion and single responsibility principles. Making your project more **readable, testable and scalable.**
 
-[![Discord](https://img.shields.io/static/v1?label=&labelColor=5865F2&message=Support&color=grey&logo=Discord&logoColor=white&url=https://discord.gg/XM47TsGScH)](https://discord.gg/XM47TsGScH)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![](https://github.com/gustavopsantos/reflex/workflows/Tests/badge.svg)
-[![PullRequests](https://img.shields.io/badge/PRs-welcome-blueviolet)](http://makeapullrequest.com)
-[![Releases](https://img.shields.io/github/release/gustavopsantos/reflex.svg)](https://github.com/gustavopsantos/reflex/releases)
-[![OpenUPM](https://img.shields.io/npm/v/com.gustavopsantos.reflex?label=OpenUPM&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.gustavopsantos.reflex/)
+[![OpenUPM](https://img.shields.io/npm/v/io.github.idreamsofgame.reflexplus?label=OpenUPM&registry_uri=https://package.openupm.com)](https://openupm.com/packages/io.github.idreamsofgame.reflexplus/)
 [![Unity](https://img.shields.io/badge/Unity-2021+-black.svg)](https://unity3d.com/pt/get-unity/download/archive)
 
 </div>
@@ -69,11 +65,11 @@ Compatible with the following platforms:
 ---
 
 ## 💾 Installation
-You can install Reflex using any of the following methods:
+You can install Reflex+ using any of the following methods:
 
 ### Unity Package Manager
 ```
-https://github.com/gustavopsantos/reflex.git?path=/Assets/Reflex/#10.0.1
+https://github.com/iDreamsOfGame/ReflexPlus.git?path=/Assets/ReflexPlus
 ```
 
 1. In Unity, open **Window** → **Package Manager**.
@@ -83,20 +79,20 @@ https://github.com/gustavopsantos/reflex.git?path=/Assets/Reflex/#10.0.1
 ### Open Unity Package Manager
 
 ```bash
-openupm install com.gustavopsantos.reflex
+openupm install io.github.idreamsofgame.reflexplus
 ```
 
 ### Unity Package
-1. Download the .unitypackage from [releases](https://github.com/gustavopsantos/reflex/releases) page.
-2. Import Reflex.X.X.X.unitypackage
+1. Download the .unitypackage from [releases](https://github.com/iDreamsOfGame/ReflexPlus/releases) page.
+2. Import Reflex+.X.X.X.unitypackage
 
 ---
 
 ## 🚀 Getting Started
-1. [Install Reflex](#-installation)
+1. [Install Reflex+](#-installation)
 2. Create `ProjectInstaller.cs` with 
 ```csharp
-using Reflex.Core;
+using ReflexPlus.Core;
 using UnityEngine;
 
 public class ProjectInstaller : MonoBehaviour, IInstaller
@@ -109,10 +105,10 @@ public class ProjectInstaller : MonoBehaviour, IInstaller
 ```
 3. In unity project window
 4. Create directory `Assets/Resources`
-5. Right click over `Resources` folder, Create → Reflex → ProjectScope
+5. Right click over `Resources` folder, Create → Reflex+ → ProjectScope
 6. With just created `ProjectScope` selected
 7. Add `ProjectInstaller.cs` as a component
-8. Right click over `Resources` folder, Create → Reflex → Settings
+8. Right click over `Resources` folder, Create → Reflex+ → Settings
 9. Select `ReflexSettings` ScriptableObject and add the `ProjectScope` prefab to the ProjectScopes list
 10. Create new scene `Greet`
 11. Add `Greet` to `Build Settings` → `Scenes In Build`
@@ -120,15 +116,16 @@ public class ProjectInstaller : MonoBehaviour, IInstaller
 ```csharp
 using UnityEngine;
 using System.Collections.Generic;
-using Reflex.Attributes;
+using ReflexPlus.Attributes;
 
 public class Greeter : MonoBehaviour
 {
-    [Inject] private readonly IEnumerable<string> _strings;
+    [Inject] 
+  	private readonly IEnumerable<string> strings;
 
     private void Start()
     {
-        Debug.Log(string.Join(" ", _strings));
+        Debug.Log(string.Join(" ", strings));
     }
 }
 ```
@@ -136,7 +133,7 @@ public class Greeter : MonoBehaviour
 14. Inside Greet scene, create a new empty gameobject named `SceneScope` and attach `SceneScope` component
 15. Create `GreetInstaller.cs` with
 ```csharp
-using Reflex.Core;
+using ReflexPlus.Core;
 using UnityEngine;
 
 public class GreetInstaller : MonoBehaviour, IInstaller
@@ -152,7 +149,7 @@ public class GreetInstaller : MonoBehaviour, IInstaller
 18. Add `Boot` to `Build Settings` → `Scenes In Build`
 19. Create `Loader.cs` with
 ```csharp
-using Reflex.Core;
+using ReflexPlus.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -160,16 +157,16 @@ public class Loader : MonoBehaviour
 {
     private void Start()
     {
-	// If you are loading scenes without addressables
-	var scene = SceneManager.LoadScene("Greet", new LoadSceneParameters(LoadSceneMode.Single));
-	ReflexSceneManager.PreInstallScene(scene, builder => builder.AddSingleton("Beautiful"));
+      // If you are loading scenes without addressables
+      var scene = SceneManager.LoadScene("Greet", new LoadSceneParameters(LoadSceneMode.Single));
+      ReflexSceneManager.PreInstallScene(scene, builder => builder.AddSingleton("Beautiful"));
 
-	// If you are loading scenes with addressables
-	Addressables.LoadSceneAsync("Greet", activateOnLoad: false).Completed += handle =>
-	{
-		ReflexSceneManager.PreInstallScene(handle.Result.Scene, builder => builder.AddSingleton("Beautiful"));
-		handle.Result.ActivateAsync();
-	};
+      // If you are loading scenes with addressables
+      Addressables.LoadSceneAsync("Greet", activateOnLoad: false).Completed += handle =>
+      {
+        ReflexSceneManager.PreInstallScene(handle.Result.Scene, builder => builder.AddSingleton("Beautiful"));
+        handle.Result.ActivateAsync();
+      };
     }
 }
 ```
@@ -188,14 +185,14 @@ public class Loader : MonoBehaviour
 ---
 
 ## 🎯 Injection Strategy
-Beginning from version 8.0.0, Reflex stops injecting all scenes automatically on Start, to start injecting only scenes with a SceneScope on Awake.
+To start injecting only scenes with a SceneScope on Awake.
 This allows users to consume injected dependencies on callbacks such as Awake and OnEnable while giving more granular control on which scenes must be injected or not.
 
 ---
 
 ## 🌱 Container Hierarchy
 ### Default Behaviour
-Reflex's default strategy for creating containers involves initially generating a root project container. For each newly loaded scene, an additional container is created, which always inherits from the root project container. This container hierarchy mirrors the flat hierarchy of Unity scenes. You can see how the structure looks like below:
+The default strategy of Reflex+ for creating containers involves initially generating a root project container. For each newly loaded scene, an additional container is created, which always inherits from the root project container. This container hierarchy mirrors the flat hierarchy of Unity scenes. You can see how the structure looks like below:
 
 ```mermaid
 graph
@@ -221,7 +218,7 @@ await handle.Task;
 var bootScene = SceneManager.GetSceneByName("Boot");
 ReflexSceneManager.OverrideSceneParentContainer(scene: handle.Result.Scene, parent: bootScene.GetSceneContainer());
 handle.Result.ActivateAsync();
-```  
+```
 
 By utilizing this API, you can create hierarchical structures such as the one shown below:
 
@@ -251,10 +248,11 @@ To register bindings to it, create a prefab, name it how you wish, the name is n
 Select ReflexSettings and add your ProjectScope prefab to the list of ProjectScopes.
 Then, create your installer as MonoBehaviour and implement IInstaller interface.
 Remember to attach your installer to the ProjectScope prefab, as ProjectScope searches for every child implementing IInstaller when it's time to create the ProjectScope container.
-There's a menu item to ease the process: Assets > Create > Reflex > ProjectScope
+There's a menu item to ease the process: Assets > Create > Reflex+ > ProjectScope
 You can create multiple ProjectScope prefabs, and when its time to create the project container, all active ProjectScope prefabs will be merged, this allow a better separation of concerns if required.
-Note that ProjectScope prefab is not required, in case Reflex does not find any ProjectScope, an empty root will be created.
+Note that ProjectScope prefab is not required, in case Reflex+ does not find any ProjectScope, an empty root will be created.
 ProjectScope instance will be disposed once app closes/app quits.
+
 > Note that unity does not call OnDestroy deterministically, so rule of thumb is do not rely on injected dependencies on OnDestroy event functions.
 
 ### Scene Scope
@@ -263,10 +261,11 @@ It is created and injected before Awake.
 To register bindings to it, create a gameobject on desired scene, name it "SceneScope", put it as root game object, and attach a "SceneScope" component to it.
 Then, create your installer as MonoBehaviour and implement IInstaller interface.
 Remember to attach your installer to your SceneScope gameobject, as SceneScope searches for every child implementing IInstaller when it's time to create the SceneScope container.
-There's a menu item to ease the process: GameObject > Reflex > Scene Context
+There's a menu item to ease the process: GameObject > Reflex+ > Scene Context
 Remember to have a single SceneScope to avoid undesired behaviour.
-Note that SceneScope gameobject is required only if you want its scene to be injected, in case Reflex do not find SceneScope, the scene injection will be skipped for that specific scene missing SceneScope.
+Note that SceneScope gameobject is required only if you want its scene to be injected, in case Reflex+ do not find SceneScope, the scene injection will be skipped for that specific scene missing SceneScope.
 SceneScope instance will be disposed once scene is unloaded.
+
 > Note that unity does not call OnDestroy deterministically, so rule of thumb is do not rely on injected dependencies on OnDestroy event functions. 
 
 ### Manual Scoping
@@ -279,27 +278,39 @@ using var scopedContainer = parentContainer.Scope(builder =>
 
 ## 🔩 Bindings
 
-### AddSingleton (From Type)
+### Register Singleton Type
 ```csharp
-ContainerBuilder::AddSingleton(Type concrete, params Type[] contracts)
+ContainerBuilder::RegisterType(Type concrete)
 ```
+or
+
+```csharp
+ContainerBuilder::RegisterType(Type concrete, object key)
+```
+
 Adds a deferred object creation based on the type to be constructed and its contracts.
 The object will be constructed lazily, once first request to resolve any of its contracts is called.
-Then **same** object will always be returned.
+Then **same** object will always be returned. If set key, the injector will math the property **InjectAttribute.Name**.
 If object implements `IDisposable` it will be disposed when its parent Container are disposed.
 There's no need to pass `IDisposable` as contract to have your object disposed, however, if you want to retrieve all `IDisposable` by any API `Single<TContract>`, `Resolve<TContract>` or `All<TContract>` then yes, you have to specify it.
 
-### AddSingleton (From Value)
+### Register Singleton Value
 ```csharp
-ContainerBuilder::AddSingleton(object instance, params Type[] contracts)
+ContainerBuilder::RegisterValue(object value)
 ```
-Adds an object already constructed by the user to the container as a singleton, everytime the contracts given is asked to be resolved, the same object will be returned.
+or
+
+```csharp
+ContainerBuilder::RegisterValue(object value, object key)
+```
+
+Adds an object already constructed by the user to the container as a singleton, everytime the contracts given is asked to be resolved, the same object will be returned. If set key, the injector will math the property **InjectAttribute.Name**.
 If object implements `IDisposable` it will be disposed when its parent Container are disposed.
 There's no need to pass `IDisposable` as contract to have your object disposed, however, if you want to retrieve all `IDisposable` by any API `Single<TContract>`, `Resolve<TContract>` or `All<TContract>` then yes, you have to specify it.
 
-### AddSingleton (From Factory)
+### Register Singleton Value from Factory
 ```csharp
-ContainerBuilder::AddSingleton<T>(Func<Container, T> factory, params Type[] contracts)
+ContainerBuilder::RegisterFactory<T>(Func<Container, T> factory)
 ```
 Adds a deferred object creation based on the given factory and its contracts.
 The object will be constructed lazily, once first request to resolve any of its contracts is called.
@@ -307,17 +318,22 @@ The factory will be ran once, and then the **same** object will always be return
 If object implements `IDisposable` it will be disposed when its parent Container are disposed.
 There's no need to pass `IDisposable` as contract to have your object disposed, however, if you want to retrieve all `IDisposable` by any API `Single<TContract>`, `Resolve<TContract>` or `All<TContract>` then yes, you have to specify it.
 
-### AddTransient (From Type)
+### Register Transient Type
 ```csharp
-ContainerBuilder::AddTransient(Type concrete, params Type[] contracts)
+ContainerBuilder::RegisterType(Type concrete, Lifetime.Transient)
 ```
+or
+
+```csharp
+ContainerBuilder::RegisterType(Type concrete, object key, Lifetime.Transient)
+```
+
 Adds a deferred object creation based on the type to be constructed and its contracts.
 The object will be constructed lazily, once first request to resolve any of its contracts is called.
-Then for any request of any contract, a new object will be created, use this carefully.
-If object implements `IDisposable` it will be disposed when the container who constructed the instance are disposed, and eventually collected when GC kicks in.
+Then for any request of any contract, a new object will be created, use this carefully. If set key, the injector will math the property **InjectAttribute.Name**. If object implements `IDisposable` it will be disposed when the container who constructed the instance are disposed, and eventually collected when GC kicks in.
 There's no need to pass `IDisposable` as contract to have your object disposed, however, if you want to retrieve all `IDisposable` by any API `Single<TContract>`, `Resolve<TContract>` or `All<TContract>` then yes, you have to specify it.
 
-### AddTransient (From Factory)
+### Register Transient Value from Factory
 ```csharp
 ContainerBuilder::AddTransient(Func<Container, T> factory, params Type[] contracts)
 ```
@@ -367,14 +383,41 @@ You can use it to inject fields, writeable properties and methods like following
 ```csharp
 class Foo : MonoBehaviour  
 {  
-	[Inject] private readonly IInputManager _inputManager;  
-	[Inject] public IEnumerable<IManager> Managers { get; private set; }  
+	[Inject]
+  private readonly IInputManager inputManager;
   
-	[Inject]  
+  [Inject(true)]
+  private readonly ISoundManager soundManager;
+  
+  [Inject("actors")]
+  private readonly IActorManager actorManager;
+  
+	[Inject]
+  public IEnumerable<IManager> Managers { get; private set; }
+  
+  [Inject(true)]
+  public ISoundManager SoundManager { get; private set; }
+  
+  [Inject("actors")]
+  public IActorManager ActorManager { get; private set; }
+  
+	[Inject]
 	private void Inject(IEnumerable<int> numbers) // Method name here does not matter  
 	{  
 	  ...
-	}  
+	}
+  
+  [Inject(true)]
+  private void Inject(ISoundManager manager)
+  {
+	  ...
+  }
+  
+  [Inject("actors")]
+  private void Inject(IActorManager manager)
+  {
+	  ...
+  }
 }
 ```
 > Note that attribute injection also works on non-mono classes.
@@ -418,31 +461,58 @@ Should be used to inject fields, writeable properties and methods like following
 ```csharp
 class Foo : MonoBehaviour  
 {  
-	[Inject] private readonly IInputManager _inputManager;  
-	[Inject] public IEnumerable<IManager> Managers { get; private set; }  
+	[Inject]
+  private readonly IInputManager inputManager;
   
-	[Inject]  
+  [Inject(true)]
+  private readonly ISoundManager soundManager;
+  
+  [Inject("actors")]
+  private readonly IActorManager actorManager;
+  
+	[Inject]
+  public IEnumerable<IManager> Managers { get; private set; }
+  
+  [Inject(true)]
+  public ISoundManager SoundManager { get; private set; }
+  
+  [Inject("actors")]
+  public IActorManager ActorManager { get; private set; }
+  
+	[Inject]
 	private void Inject(IEnumerable<int> numbers) // Method name here does not matter  
 	{  
 	  ...
-	}  
+	}
+  
+  [Inject(true)]
+  private void Inject(ISoundManager manager)
+  {
+	  ...
+  }
+  
+  [Inject("actors")]
+  private void Inject(IActorManager manager)
+  {
+	  ...
+  }
 }
 ```
 > Note that `InjectAttribute` also works on non-mono classes.
 
-### ReflexConstructorAttribute
-Can be placed on constructors, telling reflex which constructor to use when instantiating an object.
-By default its not required, as usually injected classes have a single constructor, so by default reflex tries to find the constructor with most arguments.
-But sometimes this can be required if you need more granular control on which construtor reflex should use.
+### ConstructorInjectAttribute
+Can be placed on constructors, telling reflex+ which constructor to use when instantiating an object.
+By default its not required, as usually injected classes have a single constructor, so by default reflex+ tries to find the constructor with most arguments.
+But sometimes this can be required if you need more granular control on which construtor reflex+ should use.
 
 ---
 
 ## 💉 Manual Injection
 
-If objects (plain old c# objects or unity objects) are created during runtime, theres no way reflex can detect this creation to auto inject the object, this needs to be done manually using one of the following methods:
+If objects (plain old c# objects or unity objects) are created during runtime, theres no way reflex+ can detect this creation to auto inject the object, this needs to be done manually using one of the following methods:
 
 ```csharp
-AttributeInjector::void Inject(object obj, Container container)
+AttributeInjector::void InjectInto(object obj, Container container)
 // Injects given object fields, properties and methods that was annotated with Inject attribute
 ```
 
@@ -495,8 +565,9 @@ var foo = gameObject.scene.GetSceneContainer().Resolve<IFoo>();
 
 ## 🐛 Debugger
 
-It can be accessed from menu item  Window → Analysis → Reflex Debugger, or from shortcut CTRL + E.  
-To enable reflex debug mode you must go to Edit → Project Settings → Player, then in the Other Settings panel, scroll down to Script Compilation → Scripting Define Symbols and add `REFLEX_DEBUG`. This can be easily achieved by clicking on the bug button at bottom right corner inside Reflex Debugger Window.
+It can be accessed from menu item  Window → Analysis → Reflex+ Debugger, or from shortcut CTRL + E.  
+To enable reflex+ debug mode you must go to Edit → Project Settings → Player, then in the Other Settings panel, scroll down to Script Compilation → Scripting Define Symbols and add `REFLEX_PLUS_DEBUG`. This can be easily achieved by clicking on the bug button at bottom right corner inside Reflex+ Debugger Window.
+
 > Note that debug mode reduces performance and increases memory pressure, so use it wisely.  
 
 ![Preview](Graphics/reflex-debugger.png)  
@@ -520,8 +591,8 @@ Debugger window allows you to inspect the following:
 ---
 
 ## 🪛 Settings
-It's a  `ReflexSettings` scriptable object instance, named `ReflexSettings` that should live inside a `Resources` folder.
-It can be created by asset menu item Assets → Create → Reflex → Settings.
+It's a  `ReflexPlusSettings` scriptable object instance, named `ReflexPlusSettings` that should live inside a `Resources` folder.
+It can be created by asset menu item Assets → Create → Reflex+ → Settings.
 
 - logging verbosity is configured in this asset, and default value is set to `Info`
 - the list of ProjectScopes is also configured in this asset, and default value is empty
@@ -531,46 +602,44 @@ It can be created by asset menu item Assets → Create → Reflex → Settings.
 ---
 
 ## 📊 Performance
-> Resolving ten thousand times a transient dependency with four levels of chained dependencies. See [NestedBenchmarkReflex.cs](Assets/Reflex.Benchmark/NestedBenchmarkReflex.cs).
+> Resolving ten thousand times a transient dependency with four levels of chained dependencies. See [NestedBenchmarkReflexPlus.cs](Assets/ReflexPlus.Benchmark/NestedBenchmarkReflexPlus.cs).
 
 ### Android + Mono
-|            |       GC |     Time | GC Ratio | Time Ratio |
-|------------|---------:|---------:|---------:|-----------:|
-| Reflex     |  54.7 KB |    4.9ms |     100% |       100% |
-| Zenject    | 503.9 KB |   34.4ms |     921% |       702% |
-| VContainer |  70.3 KB |   20.3ms |     128% |       414% |
+|            |       GC |   Time | GC Ratio | Time Ratio |
+| ---------- | -------: | -----: | -------: | ---------: |
+| Reflex+    |  54.7 KB |  4.9ms |     100% |       100% |
+| Zenject    | 503.9 KB | 34.4ms |     921% |       702% |
+| VContainer |  70.3 KB | 20.3ms |     128% |       414% |
 
 ### Android + IL2CPP
-|           |        GC |   Time | GC Ratio | Time Ratio |
-|-----------|----------:|-------:|---------:|-----------:|
-| Reflex    |  140.6 KB |  4.0ms |     100% |       100% |
-| Zenject   |   1000 KB | 15.8ms |     711% |       395% |
-| VContainer|  140.6 KB |  4.2ms |     100% |       105% |
+|            |       GC |   Time | GC Ratio | Time Ratio |
+| ---------- | -------: | -----: | -------: | ---------: |
+| Reflex+    | 140.6 KB |  4.0ms |     100% |       100% |
+| Zenject    |  1000 KB | 15.8ms |     711% |       395% |
+| VContainer | 140.6 KB |  4.2ms |     100% |       105% |
 
 ### Windows + Mono
-|           |         GC |   Time | GC Ratio | Time Ratio |
-|-----------|-----------:|-------:|---------:|-----------:|
-| Reflex    |   140.6 KB |  0.7ms |     100% |       100% |
-| Zenject   |    1000 KB |  5.6ms |     711% |       800% |
-| VContainer|   140.6 KB |  1.9ms |     100% |       271% |
+|            |       GC |  Time | GC Ratio | Time Ratio |
+| ---------- | -------: | ----: | -------: | ---------: |
+| Reflex+    | 140.6 KB | 0.7ms |     100% |       100% |
+| Zenject    |  1000 KB | 5.6ms |     711% |       800% |
+| VContainer | 140.6 KB | 1.9ms |     100% |       271% |
 
 ### Windows + IL2CPP
-|           |       GC |   Time | GC Ratio | Time Ratio |
-|-----------|---------:|-------:|---------:|-----------:|
-| Reflex    | 140.6 KB |  1.4ms |     100% |       100% |
-| Zenject   |  1000 KB |  6.2ms |     711% |       442% |
-| VContainer| 140.6 KB |  3.0ms |     100% |       214% |
+|            |       GC |  Time | GC Ratio | Time Ratio |
+| ---------- | -------: | ----: | -------: | ---------: |
+| Reflex+    | 140.6 KB | 1.4ms |     100% |       100% |
+| Zenject    |  1000 KB | 6.2ms |     711% |       442% |
+| VContainer | 140.6 KB | 3.0ms |     100% |       214% |
 
 ## 🚫 Scripting Restrictions
-If you are taking advantage of reflex to inject `IEnumerable<T>` in your constructors **AND** your are building for **IL2CPP**, you will probably get some exceptions like following:
+If you are taking advantage of reflex+ to inject `IEnumerable<T>` in your constructors **AND** your are building for **IL2CPP**, you will probably get some exceptions like following:
 
 ```
 System.ExecutionEngineException: Attempting to call method 'System.Linq.Enumerable::Cast<ANY-TYPE>' for which no ahead of time (AOT) code was generated.
 ```
 
-This happens because compiler does not know at compile time that a specific `System.Linq.Enumerable::Cast<T>` should be included. And currently Reflex does not implement any type of assembly weaving.
-> Reflex 4.0.0 had and assembly weaver that was relying on unity UnityEditor.Compilation.CompilationPipeline events and Mono.Cecil. But it was causing conflicts with projects using Burst. So it's being removed temporarly until a definitive solution is found.
-> Most probably we are going to weave assemblies the same way unity is doing for Burst as well.
+This happens because compiler does not know at compile time that a specific `System.Linq.Enumerable::Cast<T>` should be included. And currently Reflex+ does not implement any type of assembly weaving.
 
 Temporary workaround example:
 
@@ -593,16 +662,12 @@ class NumberManager
 }
 ```
 
-## 🤝 Support
 
-Ask your questions and participate in discussions regarding Reflex related and dependency injection topics at the Reflex Discord server. 
-
-<a href="https://discord.gg/XM47TsGScH"><img src="https://amplication.com/images/discord_banner_purple.svg" /></a>
 
 ---
 
 ## 📜 License
-Reflex is distributed under the terms of the MIT License.
+Reflex+ is distributed under the terms of the MIT License.
 A complete version of the license is available in the [LICENSE](LICENSE) file in
 this repository. Any contribution made to this project will be licensed under
 the MIT License.
