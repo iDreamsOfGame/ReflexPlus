@@ -2,18 +2,18 @@ using System.Reflection;
 
 namespace ReflexPlus.Injectables
 {
-    public readonly struct InjectableFieldInfo
+    public readonly struct InjectablePropertyInfo
     {
-        public InjectableFieldInfo(RegistrationId registrationId, FieldInfo fieldInfo, bool optional)
+        public InjectablePropertyInfo(RegistrationId registrationId, PropertyInfo propertyInfo, bool optional)
         {
             RegistrationId = registrationId;
-            FieldInfo = fieldInfo;
+            PropertyInfo = propertyInfo;
             Optional = optional;
         }
 
         public RegistrationId RegistrationId { get; }
 
-        public FieldInfo FieldInfo { get; }
+        public PropertyInfo PropertyInfo { get; }
 
         public bool Optional { get; }
     }

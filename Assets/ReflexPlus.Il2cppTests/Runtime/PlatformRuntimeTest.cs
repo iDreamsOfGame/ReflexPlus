@@ -3,7 +3,7 @@ using IL2CPPTest.Models;
 using ReflexPlus.Core;
 using UnityEngine;
 
-namespace ReflexPlus.IL2CPP.Tests
+namespace ReflexPlus.Il2cppTests
 {
     internal class PlatformRuntimeTest : MonoBehaviour
     {

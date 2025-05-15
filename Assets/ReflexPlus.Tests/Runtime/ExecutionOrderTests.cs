@@ -4,11 +4,12 @@ using FluentAssertions;
 using NUnit.Framework;
 using ReflexPlus.Extensions;
 using ReflexPlus.Injectors;
+using ReflexPlus.Tests;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace ReflexPlus.PlayModeTests
+namespace ReflexPlus.EditorTests
 {
     public class ExecutionOrderTests
     {

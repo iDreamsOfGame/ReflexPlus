@@ -1,11 +1,12 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
+using ReflexPlus.Tests;
 using UnityEditor.TestTools.TestRunner.Api;
 using UnityEngine;
 
-namespace ReflexPlus.PlayModeTests
+namespace ReflexPlus.EditModeTests
 {
     [SetUpFixture]
-    public class PlayModeTestsSetup
+    public class EditModeTestsSetup
     {
         [OneTimeSetUp]
         public void Setup()

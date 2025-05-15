@@ -1,13 +1,13 @@
 ﻿using ReflexPlus.Core;
 using UnityEngine;
 
-namespace ReflexPlus.PlayModeTests
+namespace ReflexPlus.EditorTests
 {
-    public class MockedInstallerB : MonoBehaviour, IInstaller
+    public class MockedInstallerA : MonoBehaviour, IInstaller
     {
         public void InstallBindings(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterValue("B");
+            containerBuilder.RegisterValue("A");
         }
     }
 }

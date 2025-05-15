@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using ReflexPlus.Attributes;
 using UnityEngine;
 
-namespace ReflexPlus.PlayModeTests
+namespace ReflexPlus.EditorTests
 {
     public class InjectedGameObject : MonoBehaviour
     {

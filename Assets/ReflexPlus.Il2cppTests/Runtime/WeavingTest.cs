@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ReflexPlus.Extensions;
 using UnityEngine;
 
-namespace ReflexPlus.IL2CPP.Tests
+namespace ReflexPlus.Il2cppTests
 {
     public class WeavingTest : MonoBehaviour
     {

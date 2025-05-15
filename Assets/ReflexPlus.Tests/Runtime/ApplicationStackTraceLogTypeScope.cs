@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace ReflexPlus.PlayModeTests
+namespace ReflexPlus.EditorTests
 {
     public class ApplicationStackTraceLogTypeScope : IDisposable
     {

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ReflexPlus.EditorTests;
 using UnityEditor.TestTools.TestRunner.Api;
 using UnityEngine;
 
-namespace ReflexPlus.PlayModeTests
+namespace ReflexPlus.Tests
 {
     public class TestResultReporter : ICallbacks
     {

@@ -41,7 +41,7 @@ namespace ReflexPlus.EditModeTests
         public void Get_ShouldReturn_AllInjectable_PublicProperties()
         {
             var typeInfo = TypeInfoCache.Get(typeof(HasPublicProperty));
-            typeInfo.InjectableProperties.Single().Name.Should().Be("Number");
+            typeInfo.InjectableProperties.Single().PropertyInfo.Name.Should().Be("Number");
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace ReflexPlus.EditModeTests
         public void Get_ShouldReturn_AllInjectable_ProtectedProperties()
         {
             var typeInfo = TypeInfoCache.Get(typeof(HasProtectedProperty));
-            typeInfo.InjectableProperties.Single().Name.Should().Be("Number");
+            typeInfo.InjectableProperties.Single().PropertyInfo.Name.Should().Be("Number");
         }
 
         [Test]
@@ -131,7 +131,7 @@ namespace ReflexPlus.EditModeTests
         public void Get_ShouldReturn_AllInjectable_PrivateProperties()
         {
             var typeInfo = TypeInfoCache.Get(typeof(HasPrivateProperty));
-            typeInfo.InjectableProperties.Single().Name.Should().Be("Number");
+            typeInfo.InjectableProperties.Single().PropertyInfo.Name.Should().Be("Number");
         }
 
         [Test]
@@ -168,7 +168,7 @@ namespace ReflexPlus.EditModeTests
         public void Get_ShouldReturn_AllInjectable_PublicProperties_UpInHierarchy()
         {
             var typeInfo = TypeInfoCache.Get(typeof(HasParentWithPublicProperty));
-            typeInfo.InjectableProperties.Single().Name.Should().Be("Number");
+            typeInfo.InjectableProperties.Single().PropertyInfo.Name.Should().Be("Number");
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace ReflexPlus.EditModeTests
         public void Get_ShouldReturn_AllInjectable_ProtectedProperties_UpInHierarchy()
         {
             var typeInfo = TypeInfoCache.Get(typeof(HasParentWithProtectedProperty));
-            typeInfo.InjectableProperties.Single().Name.Should().Be("Number");
+            typeInfo.InjectableProperties.Single().PropertyInfo.Name.Should().Be("Number");
         }
 
         [Test]
@@ -242,7 +242,7 @@ namespace ReflexPlus.EditModeTests
         public void Get_ShouldReturn_AllInjectable_PrivateProperties_UpInHierarchy()
         {
             var typeInfo = TypeInfoCache.Get(typeof(HasParentWithPrivateProperty));
-            typeInfo.InjectableProperties.Single().Name.Should().Be("Number");
+            typeInfo.InjectableProperties.Single().PropertyInfo.Name.Should().Be("Number");
         }
 
         [Test]

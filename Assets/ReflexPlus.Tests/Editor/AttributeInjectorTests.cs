@@ -67,6 +67,39 @@ namespace ReflexPlus.EditModeTests
             [Inject]
             private FieldFooInner2 injectedFieldType;
         }
+        
+        private class PropertyFooInner
+        {
+            [Inject(true)]
+            public byte InjectPropertyOptional { get; private set; }
+        }
+
+        private class PropertyFooInner2
+        {
+            [Inject]
+            public byte InjectProperty { get; private set; }
+        }
+
+        private class PropertyFoo
+        {
+            [Inject]
+            public string InjectedPropertyValue { get; private set; }
+            
+            [Inject(2)]
+            public string InjectedPropertyValueWithKey { get; private set; }
+
+            [Inject]
+            public PropertyFooInner InjectedPropertyType { get; private set; }
+
+            [Inject(2)]
+            public PropertyFooInner InjectedPropertyTypeWithKey { get; private set; }
+        }
+        
+        private class PropertyFoo2
+        {
+            [Inject]
+            public PropertyFooInner2 InjectedPropertyType { get; private set; }
+        }
 
         [Test]
         public void AddSingleton_ShouldRunAttributeInjectionOnFieldsPropertiesAndMethodsMarkedWithInjectAttribute()
@@ -122,6 +155,34 @@ namespace ReflexPlus.EditModeTests
                 .Build();
             
             Assert.Throws<FieldInjectorException>(() => container.Single<FieldFoo2>());
+        }
+
+        [Test]
+        public void AddSingleton_ShouldRunAttributeInjectionOnPropertiesMarkedByInjectAttributeWithKey()
+        {
+            var container = new ContainerBuilder()
+                .RegisterValue("42")
+                .RegisterValue("43", 2)
+                .RegisterType<PropertyFooInner>()
+                .RegisterType(typeof(PropertyFooInner), 2)
+                .RegisterType<PropertyFoo>()
+                .Build();
+            
+            var foo = container.Single<PropertyFoo>();
+            Assert.NotNull(foo);
+            Assert.AreNotEqual(foo.InjectedPropertyType, foo.InjectedPropertyTypeWithKey);
+            foo.InjectedPropertyValue.Should().Be("42");
+            foo.InjectedPropertyValueWithKey.Should().Be("43");
+        }
+
+        [Test]
+        public void AddSingleton_ShouldRunAttributeInjectionOnPropertiesMarkedByInjectAttributeWithoutOptional()
+        {
+            var container = new ContainerBuilder()
+                .RegisterType<PropertyFoo2>()
+                .Build();
+            
+            Assert.Throws<PropertyInjectorException>(() => container.Single<PropertyFoo2>());
         }
     }
 }

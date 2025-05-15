@@ -5,6 +5,8 @@ using System.Reflection;
 using ReflexPlus.Attributes;
 using ReflexPlus.Injectables;
 
+// ReSharper disable LoopCanBeConvertedToQuery
+
 namespace ReflexPlus.Caching
 {
     internal static class TypeInfoCache
@@ -13,7 +15,7 @@ namespace ReflexPlus.Caching
 
         private static readonly List<InjectableFieldInfo> Fields = new();
 
-        private static readonly List<PropertyInfo> Properties = new();
+        private static readonly List<InjectablePropertyInfo> Properties = new();
 
         private static readonly List<MethodInfo> Methods = new();
 
@@ -52,13 +54,21 @@ namespace ReflexPlus.Caching
             var properties = type
                 .GetProperties(Flags)
                 .Where(p => p.CanWrite && p.IsDefined(typeof(InjectAttribute)));
+            var injectableProperties = new List<InjectablePropertyInfo>();
+            foreach (var property in properties)
+            {
+                var attribute = property.GetCustomAttribute<InjectAttribute>();
+                var registrationId = new RegistrationId(property.PropertyType, attribute.Name);
+                var injectableProperty = new InjectablePropertyInfo(registrationId, property, attribute.Optional);
+                injectableProperties.Add(injectableProperty);
+            }
 
             var methods = type
                 .GetMethods(Flags)
                 .Where(m => m.IsDefined(typeof(InjectAttribute)));
 
             Fields.AddRange(injectableFields);
-            Properties.AddRange(properties);
+            Properties.AddRange(injectableProperties);
             Methods.AddRange(methods);
 
             if (type.BaseType != null)
