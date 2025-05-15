@@ -1,25 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Reflex.Exceptions;
-using Reflex.Extensions;
-using Reflex.Generics;
-using Reflex.Injectors;
-using Reflex.Logging;
-using Reflex.Registration;
-using Reflex.Resolvers;
+using ReflexPlus.Extensions;
+using ReflexPlus.Exceptions;
+using ReflexPlus.Injectors;
+using ReflexPlus.Logging;
+using ReflexPlus.Resolvers;
 
-namespace Reflex.Core
+namespace ReflexPlus.Core
 {
     public sealed class Container : IDisposable
     {
         public string Name { get; }
+
         internal Container Parent { get; }
+
         internal List<Container> Children { get; } = new();
+
         internal Dictionary<RegistrationId, List<IResolver>> ResolversByContract { get; }
+
         internal DisposableCollection Disposables { get; }
-        
-        internal Container(string name, Container parent, Dictionary<RegistrationId, List<IResolver>> resolversByContract, DisposableCollection disposables)
+
+        internal Container(string name,
+            Container parent,
+            Dictionary<RegistrationId, List<IResolver>> resolversByContract,
+            DisposableCollection disposables)
         {
             Diagnosis.RegisterBuildCallSite(this);
             Name = name;
@@ -51,7 +56,7 @@ namespace Reflex.Core
             Parent?.Children.Remove(this);
             ResolversByContract.Clear();
             Disposables.Dispose();
-            ReflexLogger.Log($"Container {Name} disposed", LogLevel.Info);
+            ReflexPlusLogger.Log($"Container {Name} disposed", LogLevel.Info);
         }
 
         public Container Scope(Action<ContainerBuilder> extend = null)
@@ -61,7 +66,7 @@ namespace Reflex.Core
             var scoped = builder.Build();
             return scoped;
         }
-        
+
         public T Construct<T>(object key = null)
         {
             return (T)Construct(typeof(T), key);
@@ -73,33 +78,41 @@ namespace Reflex.Core
             AttributeInjector.Inject(instance, key, this);
             return instance;
         }
-        
-        public object Resolve(Type type, object key = null)
+
+        public object Resolve(Type type, object key) => Resolve(type, false, key);
+
+        public object Resolve(Type type, bool optional = false, object key = null)
         {
             if (type.IsEnumerable(out var elementType))
             {
                 return All(elementType).CastDynamic(elementType);
             }
 
-            var resolvers = GetResolvers(type, key);
+            var resolvers = GetResolvers(type, optional, key);
             var lastResolver = resolvers.Last();
             var resolved = lastResolver.Resolve(this);
             return resolved;
         }
 
-        public TContract Resolve<TContract>(object key = null)
+        public TContract Resolve<TContract>(object key) => Resolve<TContract>(false, key);
+
+        public TContract Resolve<TContract>(bool optional = false, object key = null)
         {
-            return (TContract)Resolve(typeof(TContract), key);
-        }
-        
-        public object Single(Type type, object key = null)
-        {
-            return GetResolvers(type, key).Single().Resolve(this);
+            return (TContract)Resolve(typeof(TContract), optional, key);
         }
 
-        public TContract Single<TContract>(object key = null)
+        public object Single(Type type, object key) => Single(type, false, key);
+
+        public object Single(Type type, bool optional = false, object key = null)
         {
-            return (TContract)Single(typeof(TContract), key);
+            return GetResolvers(type, optional, key).Single().Resolve(this);
+        }
+
+        public TContract Single<TContract>(object key) => Single<TContract>(false, key);
+
+        public TContract Single<TContract>(bool optional = false, object key = null)
+        {
+            return (TContract)Single(typeof(TContract), optional, key);
         }
 
         public IEnumerable<object> All(Type contract, object key = null)
@@ -114,11 +127,11 @@ namespace Reflex.Core
         {
             var registrationId = new RegistrationId(typeof(TContract), key);
             return ResolversByContract.TryGetValue(registrationId, out var resolvers)
-                ? resolvers.Select(resolver => (TContract) resolver.Resolve(this)).ToArray()
+                ? resolvers.Select(resolver => (TContract)resolver.Resolve(this)).ToArray()
                 : Enumerable.Empty<TContract>();
         }
 
-        private IEnumerable<IResolver> GetResolvers(Type contract, object key = null)
+        private IEnumerable<IResolver> GetResolvers(Type contract, bool optional = false, object key = null)
         {
             var registrationId = new RegistrationId(contract, key);
             if (ResolversByContract.TryGetValue(registrationId, out var resolvers))
@@ -126,9 +139,12 @@ namespace Reflex.Core
                 return resolvers;
             }
 
-            throw new UnknownContractException(contract);
+            if (!optional)
+                throw new UnknownContractException(contract);
+
+            return null;
         }
-        
+
         private void OverrideSelfInjection()
         {
             ResolversByContract[new RegistrationId(typeof(Container))] = new List<IResolver> { new SingletonValueResolver(this) };

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Reflex.Sample.Application;
 using Newtonsoft.Json;
+using ReflexPlus.Sample.Application;
 using UnityEngine;
 
-namespace Reflex.Sample.Infrastructure
+namespace ReflexPlus.Sample.Infrastructure
 {
     internal class CollectionStoragePrefs : ICollectionStorage
     {

@@ -1,4 +1,4 @@
-﻿namespace Reflex.Sample.Application
+﻿namespace ReflexPlus.Sample.Application
 {
     public interface ICollectionStorage
     {

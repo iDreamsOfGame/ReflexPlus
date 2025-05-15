@@ -4,22 +4,27 @@ using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace Reflex.Editor.DebuggingWindow
+namespace ReflexPlusEditor.DebuggingWindow
 {
     internal class MultiColumnTreeView : TreeViewWithTreeModel<MyTreeElement>
     {
         private const float RowHeight = 20f;
+
         private const float ToggleWidth = 18f;
 
         private enum Column
         {
             Hierarchy,
+
             Kind,
+
             Lifetime,
+
             Calls,
         }
 
-        public MultiColumnTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader, TreeModel<MyTreeElement> model) : base(state, multiColumnHeader, model)
+        public MultiColumnTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader, TreeModel<MyTreeElement> model)
+            : base(state, multiColumnHeader, model)
         {
             rowHeight = RowHeight;
             columnIndexForTreeFoldouts = 0;
@@ -32,27 +37,29 @@ namespace Reflex.Editor.DebuggingWindow
 
         protected override void RowGUI(RowGUIArgs args)
         {
-            var item = (TreeViewItem<MyTreeElement>) args.item;
+            var item = (TreeViewItem<MyTreeElement>)args.item;
 
-            for (int i = 0; i < args.GetNumVisibleColumns(); ++i)
+            for (var i = 0; i < args.GetNumVisibleColumns(); ++i)
             {
-                CellGUI(args.GetCellRect(i), item, (Column) args.GetColumn(i), ref args);
+                CellGUI(args.GetCellRect(i), item, (Column)args.GetColumn(i));
             }
         }
 
-        private Texture2D _texture;
+        private Texture2D texture;
 
         private void TryInitTexture()
         {
-            if (_texture == null)
+            if (!texture)
             {
-                _texture = new Texture2D(1, 1);
-                _texture.SetPixel(0, 0, new Color(0f, 0f, 0f, 0.5f));
-                _texture.Apply();
+                texture = new Texture2D(1, 1);
+                texture.SetPixel(0, 0, new Color(0f, 0f, 0f, 0.5f));
+                texture.Apply();
             }
         }
 
-        private void CellGUI(Rect cellRect, TreeViewItem<MyTreeElement> item, Column column, ref RowGUIArgs args)
+        private void CellGUI(Rect cellRect,
+            TreeViewItem<MyTreeElement> item,
+            Column column)
         {
             TryInitTexture();
             CenterRectUsingSingleLineHeight(ref cellRect);
@@ -63,7 +70,7 @@ namespace Reflex.Editor.DebuggingWindow
                     DrawItemIcon(cellRect, item);
                     cellRect.xMin += 20; // Icon size (16) + 4 of padding
 
-                    if (item.Data.Contracts != null && item.Data.Contracts.Length > 0)
+                    if (item.Data.Contracts is { Length: > 0 })
                     {
                         DrawContracts(item, cellRect, item.Data.Contracts);
                     }
@@ -71,14 +78,16 @@ namespace Reflex.Editor.DebuggingWindow
                     {
                         DrawName(item, cellRect, item.Data.Name);
                     }
-
                     break;
+                
                 case Column.Calls:
                     GUI.Label(cellRect, item.Data.Resolutions.Invoke());
                     break;
+                
                 case Column.Kind:
                     GUI.Label(cellRect, item.Data.Kind);
                     break;
+                
                 case Column.Lifetime:
                     GUI.Label(cellRect, item.Data.ResolutionType);
                     break;
@@ -94,9 +103,7 @@ namespace Reflex.Editor.DebuggingWindow
         private void DrawContracts(TreeViewItem<MyTreeElement> item, Rect rect, string[] contracts)
         {
             if (contracts == null || contracts.Length == 0 || string.IsNullOrEmpty(contracts[0]))
-            {
                 return;
-            }
 
             rect.y += 1;
 
@@ -114,14 +121,14 @@ namespace Reflex.Editor.DebuggingWindow
             // Clipping group
             GUI.BeginGroup(rect);
             {
-                float labelXOffset = 0.0f;
+                var labelXOffset = 0.0f;
                 foreach (var contract in contracts)
                 {
                     var content = new GUIContent($"{contract}");
                     var labelWidth = style.CalcSize(content).x;
 
                     // Draw the label within the bounds of the rect
-                    Rect labelRect = new Rect(labelXOffset, 0, labelWidth, rect.height);
+                    var labelRect = new Rect(labelXOffset, 0, labelWidth, rect.height);
                     GUI.Label(labelRect, content, style);
 
                     // Move the rect for the next contract
@@ -143,7 +150,7 @@ namespace Reflex.Editor.DebuggingWindow
             GUI.BeginGroup(area);
             {
                 // Draw the icon within the bounds of the area
-                Rect iconRect = new Rect(0, 0, 16, area.height);
+                var iconRect = new Rect(0, 0, 16, area.height);
                 GUI.DrawTexture(iconRect, item.Data.Icon, ScaleMode.ScaleToFit);
             }
             GUI.EndGroup();
@@ -157,10 +164,7 @@ namespace Reflex.Editor.DebuggingWindow
             base.RowGUI(args);
         }
 
-        protected override bool CanMultiSelect(TreeViewItem item)
-        {
-            return false;
-        }
+        protected override bool CanMultiSelect(TreeViewItem item) => false;
 
         public static MultiColumnHeaderState CreateDefaultMultiColumnHeaderState()
         {
@@ -169,7 +173,7 @@ namespace Reflex.Editor.DebuggingWindow
                 new MultiColumnHeaderState.Column
                 {
                     canSort = false,
-                    headerContent = new GUIContent(Column.Hierarchy.ToString()),
+                    headerContent = new GUIContent(nameof(Column.Hierarchy)),
                     headerTextAlignment = TextAlignment.Left,
                     width = 280,
                     minWidth = 60,
@@ -179,7 +183,7 @@ namespace Reflex.Editor.DebuggingWindow
                 new MultiColumnHeaderState.Column
                 {
                     canSort = false,
-                    headerContent = new GUIContent(Column.Kind.ToString()),
+                    headerContent = new GUIContent(nameof(Column.Kind)),
                     headerTextAlignment = TextAlignment.Left,
                     width = 64,
                     minWidth = 64,
@@ -190,7 +194,7 @@ namespace Reflex.Editor.DebuggingWindow
                 new MultiColumnHeaderState.Column
                 {
                     canSort = false,
-                    headerContent = new GUIContent(Column.Lifetime.ToString()),
+                    headerContent = new GUIContent(nameof(Column.Lifetime)),
                     headerTextAlignment = TextAlignment.Left,
                     width = 64,
                     minWidth = 64,
@@ -201,7 +205,7 @@ namespace Reflex.Editor.DebuggingWindow
                 new MultiColumnHeaderState.Column
                 {
                     canSort = false,
-                    headerContent = new GUIContent(Column.Calls.ToString()),
+                    headerContent = new GUIContent(nameof(Column.Calls)),
                     headerTextAlignment = TextAlignment.Left,
                     width = 38,
                     minWidth = 38,

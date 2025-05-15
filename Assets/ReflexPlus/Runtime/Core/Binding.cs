@@ -1,17 +1,11 @@
 ﻿using System;
-using Reflex.Exceptions;
-using Reflex.Resolvers;
+using ReflexPlus.Exceptions;
+using ReflexPlus.Resolvers;
 
-namespace Reflex.Core
+namespace ReflexPlus.Core
 {
     public sealed class Binding
     {
-        public IResolver Resolver { get; }
-        
-        public Type[] Contracts { get; }
-
-        public object Key { get; }
-
         private Binding()
         {
         }
@@ -22,8 +16,17 @@ namespace Reflex.Core
             Contracts = contracts;
             Key = key;
         }
+        
+        public IResolver Resolver { get; }
 
-        public static Binding Validated(IResolver resolver, Type concrete, object key = null, params Type[] contracts)
+        public Type[] Contracts { get; }
+
+        public object Key { get; }
+
+        public static Binding Validated(IResolver resolver,
+            Type concrete,
+            object key = null,
+            params Type[] contracts)
         {
             foreach (var contract in contracts)
             {

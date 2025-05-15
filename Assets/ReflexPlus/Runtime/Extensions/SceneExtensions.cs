@@ -1,8 +1,8 @@
-﻿using Reflex.Core;
-using Reflex.Injectors;
+﻿using ReflexPlus.Core;
+using ReflexPlus.Injectors;
 using UnityEngine.SceneManagement;
 
-namespace Reflex.Extensions
+namespace ReflexPlus.Extensions
 {
     public static class SceneExtensions
     {

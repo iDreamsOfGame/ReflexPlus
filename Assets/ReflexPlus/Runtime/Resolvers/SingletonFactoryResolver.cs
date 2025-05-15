@@ -1,23 +1,24 @@
 ﻿using System;
-using Reflex.Core;
-using Reflex.Enums;
-using Reflex.Generics;
+using ReflexPlus.Core;
 
-namespace Reflex.Resolvers
+namespace ReflexPlus.Resolvers
 {
     internal sealed class SingletonFactoryResolver : IResolver
     {
-        private object _instance;
-        private readonly Func<Container, object> _factory;
-        private readonly DisposableCollection _disposables = new();
+        private object instance;
+
+        private readonly Func<Container, object> factory;
+
+        private readonly DisposableCollection disposables = new();
 
         public Lifetime Lifetime => Lifetime.Singleton;
+
         public Resolution Resolution { get; }
 
         public SingletonFactoryResolver(Func<Container, object> factory, Resolution resolution)
         {
             Diagnosis.RegisterCallSite(this);
-            _factory = factory;
+            this.factory = factory;
             Resolution = resolution;
         }
 
@@ -25,19 +26,19 @@ namespace Reflex.Resolvers
         {
             Diagnosis.IncrementResolutions(this);
 
-            if (_instance == null)
+            if (instance == null)
             {
-                _instance = _factory.Invoke(container);
-                _disposables.TryAdd(_instance);
-                Diagnosis.RegisterInstance(this, _instance);
+                instance = factory.Invoke(container);
+                disposables.TryAdd(instance);
+                Diagnosis.RegisterInstance(this, instance);
             }
 
-            return _instance;
+            return instance;
         }
 
         public void Dispose()
         {
-            _disposables.Dispose();
+            disposables.Dispose();
         }
     }
 }

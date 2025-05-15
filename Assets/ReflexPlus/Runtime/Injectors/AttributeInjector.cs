@@ -1,14 +1,14 @@
-using Reflex.Caching;
-using Reflex.Core;
+using ReflexPlus.Caching;
+using ReflexPlus.Core;
 
-namespace Reflex.Injectors
+namespace ReflexPlus.Injectors
 {
     public static class AttributeInjector
     {
         public static void Inject(object obj, object key, Container container)
         {
             var info = TypeInfoCache.Get(obj.GetType(), key);
-            info.InjectInfoFields(obj, key, container);
+            info.InjectInfoFields(obj, container);
 
             var properties = info.InjectableProperties;
             var propertyCount = properties.Length;

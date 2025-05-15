@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Reflex.Enums;
-using Reflex.Generics;
-using Reflex.Injectors;
-using Reflex.Registration;
-using Reflex.Resolvers;
+using ReflexPlus.Injectors;
+using ReflexPlus.Resolvers;
 using UnityEngine.Assertions;
 
 // ReSharper disable MergeIntoPattern
 
-namespace Reflex.Core
+namespace ReflexPlus.Core
 {
     public sealed class ContainerBuilder
     {
@@ -118,12 +115,12 @@ namespace Reflex.Core
         {
             return RegisterType(typeof(T), key, lifetime, resolution);
         }
-        
+
         public ContainerBuilder RegisterType<T>(Lifetime lifetime = Lifetime.Singleton, Resolution resolution = Resolution.Lazy)
         {
             return RegisterType(typeof(T), lifetime, resolution);
         }
-        
+
         public ContainerBuilder RegisterType<T>(Type[] contracts,
             Lifetime lifetime = Lifetime.Singleton,
             Resolution resolution = Resolution.Lazy)
@@ -223,7 +220,10 @@ namespace Reflex.Core
             }
         }
 
-        private ContainerBuilder Add(Type concrete, Type[] contracts, object key, IResolver resolver)
+        private ContainerBuilder Add(Type concrete,
+            Type[] contracts,
+            object key,
+            IResolver resolver)
         {
             var binding = Binding.Validated(resolver, concrete, key, contracts);
             Bindings.Add(binding);

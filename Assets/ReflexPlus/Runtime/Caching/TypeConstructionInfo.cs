@@ -1,11 +1,11 @@
 using System;
-using Reflex.Delegates;
 
-namespace Reflex.Caching
+namespace ReflexPlus.Caching
 {
     internal sealed class TypeConstructionInfo
     {
         public readonly ObjectActivator ObjectActivator;
+
         public readonly Type[] ConstructorParameters;
 
         public TypeConstructionInfo(ObjectActivator objectActivator, Type[] constructorParameters)

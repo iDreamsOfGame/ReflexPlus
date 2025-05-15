@@ -1,17 +1,17 @@
 using System;
-using Reflex.Caching;
-using Reflex.Core;
-using Reflex.Exceptions;
-using Reflex.Pooling;
+using ReflexPlus.Caching;
+using ReflexPlus.Core;
+using ReflexPlus.Exceptions;
 
-namespace Reflex.Injectors
+namespace ReflexPlus.Injectors
 {
     internal static class MethodInjector
     {
         [ThreadStatic]
-        private static SizeSpecificArrayPool<object> _arrayPool;
-        private static SizeSpecificArrayPool<object> ArrayPool => _arrayPool ??= new SizeSpecificArrayPool<object>(maxLength: 16);
-        
+        private static SizeSpecificArrayPool<object> arrayPool;
+
+        private static SizeSpecificArrayPool<object> ArrayPool => arrayPool ??= new SizeSpecificArrayPool<object>(maxLength: 16);
+
         internal static void Inject(InjectedMethodInfo method, object instance, Container container)
         {
             var methodParameters = method.Parameters;

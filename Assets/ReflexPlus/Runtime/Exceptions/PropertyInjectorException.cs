@@ -1,10 +1,11 @@
 ﻿using System;
 
-namespace Reflex.Exceptions
+namespace ReflexPlus.Exceptions
 {
     internal sealed class PropertyInjectorException : Exception
     {
-        public PropertyInjectorException(Exception e) : base(e.Message)
+        public PropertyInjectorException(Exception e)
+            : base(e.Message)
         {
         }
     }

@@ -1,21 +1,21 @@
 ﻿using System;
-using Reflex.Injectors;
+using ReflexPlus.Injectors;
 
-namespace Reflex.Core
+namespace ReflexPlus.Core
 {
     public class ExtraInstallerScope : IDisposable
     {
-        private readonly Action<ContainerBuilder> _extraInstaller;
+        private readonly Action<ContainerBuilder> extraInstaller;
 
         public ExtraInstallerScope(Action<ContainerBuilder> extraInstaller)
         {
-            _extraInstaller = extraInstaller;
-            UnityInjector.ExtraInstallers += _extraInstaller;
+            this.extraInstaller = extraInstaller;
+            UnityInjector.ExtraInstallers += this.extraInstaller;
         }
-        
+
         public void Dispose()
         {
-            UnityInjector.ExtraInstallers -= _extraInstaller;
+            UnityInjector.ExtraInstallers -= extraInstaller;
         }
     }
 }

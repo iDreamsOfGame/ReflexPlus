@@ -2,11 +2,12 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Reflex.Exceptions
+namespace ReflexPlus.Exceptions
 {
     internal sealed class MethodInjectorException : Exception
     {
-        public MethodInjectorException(object obj, MethodInfo method, Exception e) : base(BuildMessage(obj, method, e))
+        public MethodInjectorException(object obj, MethodInfo method, Exception e)
+            : base(BuildMessage(obj, method, e))
         {
         }
 

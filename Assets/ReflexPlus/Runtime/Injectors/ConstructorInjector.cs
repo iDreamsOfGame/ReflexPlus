@@ -1,17 +1,17 @@
 using System;
-using Reflex.Caching;
-using Reflex.Core;
-using Reflex.Exceptions;
-using Reflex.Pooling;
+using ReflexPlus.Caching;
+using ReflexPlus.Core;
+using ReflexPlus.Exceptions;
 
-namespace Reflex.Injectors
+namespace ReflexPlus.Injectors
 {
     public static class ConstructorInjector
     {
         [ThreadStatic]
-        private static SizeSpecificArrayPool<object> _arrayPool;
-        internal static SizeSpecificArrayPool<object> ArrayPool => _arrayPool ??= new SizeSpecificArrayPool<object>(maxLength: 16);
-        
+        private static SizeSpecificArrayPool<object> arrayPool;
+
+        internal static SizeSpecificArrayPool<object> ArrayPool => arrayPool ??= new SizeSpecificArrayPool<object>(maxLength: 16);
+
         public static object Construct(Type concrete, Container container)
         {
             var info = TypeConstructionInfoCache.Get(concrete);
@@ -37,7 +37,7 @@ namespace Reflex.Injectors
                 ArrayPool.Return(arguments);
             }
         }
-        
+
         public static object Construct(Type concrete, object[] arguments)
         {
             var info = TypeConstructionInfoCache.Get(concrete);

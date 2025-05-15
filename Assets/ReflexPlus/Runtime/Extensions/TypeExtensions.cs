@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Reflex.Extensions
+namespace ReflexPlus.Extensions
 {
     internal static class TypeExtensions
     {
@@ -18,13 +18,13 @@ namespace Reflex.Extensions
             elementType = null;
             return false;
         }
-        
+
         internal static bool TryGetConstructors(this Type type, out ConstructorInfo[] constructors)
         {
             constructors = type.GetConstructors();
             return constructors.Length > 0;
         }
-        
+
         internal static string GetName(this Type type)
         {
             if (type.IsGenericType)
@@ -36,7 +36,7 @@ namespace Reflex.Extensions
 
             return type.Name;
         }
-        
+
         internal static string GetFullName(this Type type)
         {
             if (type.IsGenericType)

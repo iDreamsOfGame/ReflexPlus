@@ -10,26 +10,26 @@ public static class UnityScriptingDefineSymbols
         var symbols = GetSymbols(platform);
         return symbols.Contains(symbol);
     }
-    
+
     public static void Add(string symbol, BuildTargetGroup platform)
     {
         var symbols = GetSymbols(platform);
         symbols.Add(symbol);
         SetSymbols(symbols, platform);
     }
-    
+
     public static void Remove(string symbol, BuildTargetGroup platform)
     {
         var symbols = GetSymbols(platform);
         symbols.Remove(symbol);
         SetSymbols(symbols, platform);
     }
-    
+
     private static HashSet<string> GetSymbols(BuildTargetGroup platform)
     {
         return new HashSet<string>(PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(platform)).Split(';'));
     }
-    
+
     private static void SetSymbols(HashSet<string> symbols, BuildTargetGroup platform)
     {
         PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(platform), string.Join(";", symbols));
@@ -38,16 +38,9 @@ public static class UnityScriptingDefineSymbols
     public static void Toggle(string symbol, BuildTargetGroup platform)
     {
         var symbols = GetSymbols(platform);
-        
-        if (symbols.Contains(symbol))
-        {
+        if (!symbols.Add(symbol))
             symbols.Remove(symbol);
-        }
-        else
-        {
-            symbols.Add(symbol);
-        }
-        
+
         SetSymbols(symbols, platform);
     }
 }

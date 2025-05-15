@@ -1,39 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Reflex.Attributes;
-using Reflex.Extensions;
-using Reflex.Reflectors;
+using ReflexPlus.Extensions;
+using ReflexPlus.Attributes;
+using ReflexPlus.Reflectors;
 
-namespace Reflex.Caching
+namespace ReflexPlus.Caching
 {
     internal static class TypeConstructionInfoCache
     {
-        private static readonly Dictionary<IntPtr, TypeConstructionInfo> _dictionary = new();
+        private static readonly Dictionary<IntPtr, TypeConstructionInfo> Dictionary = new();
 
         internal static TypeConstructionInfo Get(Type type)
         {
             var key = type.TypeHandle.Value;
-            if (!_dictionary.TryGetValue(key, out var info))
+            if (!Dictionary.TryGetValue(key, out var info))
             {
                 info = Generate(type);
-                _dictionary.Add(key, info);
+                Dictionary.Add(key, info);
             }
-        
+
             return info;
         }
-        
+
         private static TypeConstructionInfo Generate(Type type)
         {
             if (type.TryGetConstructors(out var constructors))
             {
-                var constructor = constructors.FirstOrDefault(c => Attribute.IsDefined(c, typeof(ReflexConstructorAttribute))); // Try to get a constructor that defines ReflexConstructor
+                var constructor = constructors.FirstOrDefault(c => Attribute.IsDefined(c, typeof(ReflexPlusConstructorAttribute))); // Try to get a constructor that defines ReflexConstructor
 
                 if (constructor == null)
                 {
                     constructor = constructors.MaxBy(ctor => ctor.GetParameters().Length); // Gets the constructor with most arguments
                 }
-                
+
                 var parameters = constructor.GetParameters().Select(p => p.ParameterType).ToArray();
                 return new TypeConstructionInfo(ActivatorFactoryManager.Factory.GenerateActivator(type, constructor, parameters), parameters);
             }

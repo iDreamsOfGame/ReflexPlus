@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Reflex.Extensions
+namespace ReflexPlus.Extensions
 {
     internal static class IntExtensions
     {

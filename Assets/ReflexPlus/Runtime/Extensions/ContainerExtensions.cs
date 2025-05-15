@@ -1,16 +1,16 @@
 ﻿using System.Runtime.CompilerServices;
-using Reflex.Core;
-using Reflex.Logging;
+using ReflexPlus.Core;
+using ReflexPlus.Logging;
 
-namespace Reflex.Extensions
+namespace ReflexPlus.Extensions
 {
     public static class ContainerExtensions
     {
-        private static readonly ConditionalWeakTable<Container, ContainerDebugProperties> _containerDebugProperties = new();
+        private static readonly ConditionalWeakTable<Container, ContainerDebugProperties> ContainerDebugProperties = new();
 
         internal static ContainerDebugProperties GetDebugProperties(this Container container)
         {
-            return _containerDebugProperties.GetOrCreateValue(container);
+            return ContainerDebugProperties.GetOrCreateValue(container);
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Pool;
-using Reflex.Injectors;
+using ReflexPlus.Injectors;
 
-namespace Reflex.Core
+namespace ReflexPlus.Core
 {
     public class ContainerScope : MonoBehaviour
     {
@@ -10,16 +10,16 @@ namespace Reflex.Core
         {
             UnityInjector.OnSceneLoaded.Invoke(gameObject.scene, this);
         }
-        
+
         public void InstallBindings(ContainerBuilder containerBuilder)
         {
             using (ListPool<IInstaller>.Get(out var installers))
             {
                 GetComponentsInChildren(installers);
-            
-                for (var i = 0; i < installers.Count; i++)
+
+                foreach (var installer in installers)
                 {
-                    installers[i].InstallBindings(containerBuilder);
+                    installer.InstallBindings(containerBuilder);
                 }
             }
         }

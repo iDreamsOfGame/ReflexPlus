@@ -1,12 +1,13 @@
 using System;
 using System.Linq;
-using Reflex.Extensions;
+using ReflexPlus.Extensions;
 
-namespace Reflex.Exceptions
+namespace ReflexPlus.Exceptions
 {
     internal sealed class ConstructorInjectorException : Exception
     {
-        public ConstructorInjectorException(Type type, Exception exception, Type[] constructorParameters) : base(BuildMessage(type, exception, constructorParameters))
+        public ConstructorInjectorException(Type type, Exception exception, Type[] constructorParameters)
+            : base(BuildMessage(type, exception, constructorParameters))
         {
         }
 

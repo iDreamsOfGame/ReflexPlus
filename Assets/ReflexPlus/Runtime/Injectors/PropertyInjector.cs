@@ -1,9 +1,9 @@
 using System;
 using System.Reflection;
-using Reflex.Core;
-using Reflex.Exceptions;
+using ReflexPlus.Core;
+using ReflexPlus.Exceptions;
 
-namespace Reflex.Injectors
+namespace ReflexPlus.Injectors
 {
     internal static class PropertyInjector
     {

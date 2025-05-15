@@ -1,10 +1,11 @@
 ﻿using System;
 
-namespace Reflex.Exceptions
+namespace ReflexPlus.Exceptions
 {
     internal sealed class FieldInjectorException : Exception
     {
-        public FieldInjectorException(Exception e) : base(e.Message)
+        public FieldInjectorException(Exception e)
+            : base(e.Message)
         {
         }
     }

@@ -1,11 +1,12 @@
 ﻿using System;
-using Reflex.Extensions;
+using ReflexPlus.Extensions;
 
-namespace Reflex.Exceptions
+namespace ReflexPlus.Exceptions
 {
     internal sealed class ContractDefinitionException : Exception
     {
-        public ContractDefinitionException(Type concrete, Type contract) : base(GenerateMessage(concrete, contract))
+        public ContractDefinitionException(Type concrete, Type contract)
+            : base(GenerateMessage(concrete, contract))
         {
         }
 

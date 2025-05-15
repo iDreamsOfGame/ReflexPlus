@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Reflex.Editor
+namespace ReflexPlusEditor
 {
     internal static class UnityEditorUtility
     {
@@ -13,7 +13,7 @@ namespace Reflex.Editor
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = target;
         }
-        
+
         public static void CreateScriptableObject<T>(string desiredAssetPath) where T : ScriptableObject
         {
             var assetPath = AssetDatabase.GenerateUniqueAssetPath(desiredAssetPath);
@@ -22,22 +22,22 @@ namespace Reflex.Editor
             AssetDatabase.SaveAssets();
             Focus(asset);
         }
-        
+
         public static void CreatePrefab(string desiredPrefabPath, Action<GameObject> edit = null)
         {
-            var prefabPath =  AssetDatabase.GenerateUniqueAssetPath(desiredPrefabPath);
+            var prefabPath = AssetDatabase.GenerateUniqueAssetPath(desiredPrefabPath);
             var template = new GameObject(Path.GetFileNameWithoutExtension(prefabPath));
             var prefab = PrefabUtility.SaveAsPrefabAsset(template, prefabPath);
             Object.DestroyImmediate(template);
-            
+
             using (var editingScope = new PrefabUtility.EditPrefabContentsScope(prefabPath))
             {
                 edit?.Invoke(editingScope.prefabContentsRoot);
             }
-            
+
             Focus(prefab);
         }
-        
+
         public static string GetSelectedPathInProjectWindow()
         {
             var path = "Assets";

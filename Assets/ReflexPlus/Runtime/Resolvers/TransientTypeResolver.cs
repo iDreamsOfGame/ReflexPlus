@@ -1,27 +1,29 @@
 using System;
-using Reflex.Core;
-using Reflex.Enums;
+using ReflexPlus.Core;
 
-namespace Reflex.Resolvers
+namespace ReflexPlus.Resolvers
 {
     internal sealed class TransientTypeResolver : IResolver
     {
-        private readonly Type _concreteType;
-        private readonly object _key;
+        private readonly Type concreteType;
+
+        private readonly object key;
+
         public Lifetime Lifetime => Lifetime.Transient;
+
         public Resolution Resolution => Resolution.Lazy;
 
         public TransientTypeResolver(Type concreteType, object key)
         {
             Diagnosis.RegisterCallSite(this);
-            _concreteType = concreteType;
-            _key = key;
+            this.concreteType = concreteType;
+            this.key = key;
         }
 
         public object Resolve(Container container)
         {
             Diagnosis.IncrementResolutions(this);
-            var instance = container.Construct(_concreteType, _key);
+            var instance = container.Construct(concreteType, key);
             container.Disposables.TryAdd(instance);
             Diagnosis.RegisterInstance(this, instance);
             return instance;

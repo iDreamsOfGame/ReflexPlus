@@ -1,8 +1,7 @@
 using System;
 using System.Reflection;
-using Reflex.Delegates;
 
-namespace Reflex.Reflectors
+namespace ReflexPlus.Reflectors
 {
     internal sealed class IL2CPPActivatorFactory : IActivatorFactory
     {
@@ -16,9 +15,6 @@ namespace Reflex.Reflectors
             };
         }
 
-        public ObjectActivator GenerateDefaultActivator(Type type)
-        {
-            return args => System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type);
-        }
+        public ObjectActivator GenerateDefaultActivator(Type type) => _ => System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type);
     }
 }

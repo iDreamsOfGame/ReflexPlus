@@ -1,7 +1,7 @@
-using Reflex.Core;
+using ReflexPlus.Core;
 using UnityEngine;
 
-namespace Reflex.Sample.Infrastructure
+namespace ReflexPlus.Sample.Infrastructure
 {
     public class ReflexSampleProjectInstaller : MonoBehaviour, IInstaller
     {

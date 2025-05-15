@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
-using Reflex.Core;
+using ReflexPlus.Core;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Reflex.Injectors
+// ReSharper disable ForCanBeConvertedToForeach
+
+namespace ReflexPlus.Injectors
 {
     public static class GameObjectInjector
     {

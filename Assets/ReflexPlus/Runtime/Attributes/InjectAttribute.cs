@@ -1,7 +1,7 @@
 using System;
 using JetBrains.Annotations;
 
-namespace Reflex.Attributes
+namespace ReflexPlus.Attributes
 {
     [MeansImplicitUse(ImplicitUseKindFlags.Assign)]
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method)]
@@ -10,7 +10,7 @@ namespace Reflex.Attributes
         public InjectAttribute()
         {
         }
-        
+
         public InjectAttribute(bool optional)
         {
             Optional = optional;
@@ -20,7 +20,7 @@ namespace Reflex.Attributes
         {
             Names = names;
         }
-        
+
         public InjectAttribute(bool optional, params object[] names)
         {
             Optional = optional;
@@ -37,7 +37,7 @@ namespace Reflex.Attributes
             {
                 if (Names == null || Names.Length == 0)
                     return null;
-                
+
                 return Names[0];
             }
         }

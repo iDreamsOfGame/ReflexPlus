@@ -1,11 +1,13 @@
-namespace Reflex.Utilities
+namespace ReflexPlus.Utilities
 {
     internal static class ScriptingBackend
     {
         internal enum Backend
         {
             Undefined,
+
             Mono,
+
             IL2CPP,
         }
 

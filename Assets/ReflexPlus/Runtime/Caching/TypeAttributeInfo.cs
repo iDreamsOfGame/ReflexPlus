@@ -1,9 +1,9 @@
 using System.Linq;
 using System.Reflection;
-using Reflex.Core;
-using Reflex.Injection;
+using ReflexPlus.Core;
+using ReflexPlus.Injectables;
 
-namespace Reflex.Caching
+namespace ReflexPlus.Caching
 {
     internal sealed class TypeAttributeInfo
     {
@@ -20,12 +20,12 @@ namespace Reflex.Caching
 
         public InjectedMethodInfo[] InjectableMethods { get; }
 
-        public void InjectInfoFields(object obj, object key, Container container)
+        public void InjectInfoFields(object obj, Container container)
         {
             var fieldCount = InjectableFields.Length;
             for (var i = 0; i < fieldCount; i++)
             {
-                InjectableFields[i].InjectInto(obj, key, container);
+                InjectableFields[i].InjectInto(obj, container);
             }
         }
     }

@@ -1,10 +1,11 @@
 using System.Reflection;
 
-namespace Reflex.Caching
+namespace ReflexPlus.Caching
 {
     internal sealed class InjectedMethodInfo
     {
         public readonly MethodInfo MethodInfo;
+
         public readonly ParameterInfo[] Parameters;
 
         public InjectedMethodInfo(MethodInfo methodInfo)

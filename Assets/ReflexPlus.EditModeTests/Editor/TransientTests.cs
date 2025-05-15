@@ -1,0 +1,92 @@
+﻿using System;
+using FluentAssertions;
+using NUnit.Framework;
+using ReflexPlus.Core;
+
+namespace ReflexPlus.EditModeTests
+{
+    public class TransientTests
+    {
+        private class Service : IDisposable
+        {
+            public bool IsDisposed { get; private set; }
+
+            public void Dispose()
+            {
+                IsDisposed = true;
+            }
+        }
+
+        [Test]
+        public void TransientFromType_ConstructedInstances_ShouldBeDisposed_WithinConstructingContainer()
+        {
+            var parentContainer = new ContainerBuilder().RegisterType(typeof(Service), Lifetime.Transient).Build();
+            var childContainer = parentContainer.Scope();
+
+            var instanceConstructedByChild = childContainer.Resolve<Service>();
+            var instanceConstructedByParent = parentContainer.Resolve<Service>();
+
+            childContainer.Dispose();
+
+            instanceConstructedByChild.IsDisposed.Should().BeTrue();
+            instanceConstructedByParent.IsDisposed.Should().BeFalse();
+        }
+
+        [Test]
+        public void TransientFromFactory_ConstructedInstances_ShouldBeDisposed_WithinConstructingContainer()
+        {
+            var parentContainer = new ContainerBuilder().RegisterFactory(_ => new Service(), Lifetime.Transient).Build();
+            var childContainer = parentContainer.Scope();
+
+            var instanceConstructedByChild = childContainer.Resolve<Service>();
+            var instanceConstructedByParent = parentContainer.Resolve<Service>();
+
+            childContainer.Dispose();
+
+            instanceConstructedByChild.IsDisposed.Should().BeTrue();
+            instanceConstructedByParent.IsDisposed.Should().BeFalse();
+        }
+
+        [Test, Retry(3)]
+        public void TransientFromType_ConstructedInstances_ShouldBeCollected_WhenConstructingContainerIsDisposed()
+        {
+            WeakReference instanceConstructedByChild;
+            WeakReference instanceConstructedByParent;
+            var parentContainer = new ContainerBuilder().RegisterType(typeof(Service), Lifetime.Transient).Build();
+
+            Act();
+            GarbageCollectionTests.ForceGarbageCollection();
+            instanceConstructedByChild.IsAlive.Should().BeFalse();
+            instanceConstructedByParent.IsAlive.Should().BeTrue();
+            return;
+
+            void Act()
+            {
+                using var childContainer = parentContainer.Scope();
+                instanceConstructedByChild = new WeakReference(childContainer.Resolve<Service>());
+                instanceConstructedByParent = new WeakReference(parentContainer.Resolve<Service>());
+            }
+        }
+
+        [Test, Retry(3)]
+        public void TransientFromFactory_ConstructedInstances_ShouldBeCollected_WhenConstructingContainerIsDisposed()
+        {
+            WeakReference instanceConstructedByChild;
+            WeakReference instanceConstructedByParent;
+            var parentContainer = new ContainerBuilder().RegisterFactory(_ => new Service(), Lifetime.Transient).Build();
+
+            Act();
+            GarbageCollectionTests.ForceGarbageCollection();
+            instanceConstructedByChild.IsAlive.Should().BeFalse();
+            instanceConstructedByParent.IsAlive.Should().BeTrue();
+            return;
+
+            void Act()
+            {
+                using var childContainer = parentContainer.Scope();
+                instanceConstructedByChild = new WeakReference(childContainer.Resolve<Service>());
+                instanceConstructedByParent = new WeakReference(parentContainer.Resolve<Service>());
+            }
+        }
+    }
+}

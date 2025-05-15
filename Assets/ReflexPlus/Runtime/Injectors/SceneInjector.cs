@@ -1,9 +1,9 @@
-﻿using Reflex.Core;
+﻿using ReflexPlus.Core;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.SceneManagement;
 
-namespace Reflex.Injectors
+namespace ReflexPlus.Injectors
 {
     internal static class SceneInjector
     {

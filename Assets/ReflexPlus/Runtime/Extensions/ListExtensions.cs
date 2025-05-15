@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Reflex.Extensions
+namespace ReflexPlus.Extensions
 {
     internal static class ListExtensions
     {

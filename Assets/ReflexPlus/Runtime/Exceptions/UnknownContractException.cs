@@ -1,11 +1,12 @@
 using System;
-using Reflex.Extensions;
+using ReflexPlus.Extensions;
 
-namespace Reflex.Exceptions
+namespace ReflexPlus.Exceptions
 {
     public sealed class UnknownContractException : Exception
     {
-        public UnknownContractException(Type contract) : base(GenerateMessage(contract))
+        public UnknownContractException(Type contract)
+            : base(GenerateMessage(contract))
         {
         }
 

@@ -2,39 +2,40 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Reflex.Attributes;
-using Reflex.Injection;
-using Reflex.Registration;
+using ReflexPlus.Attributes;
+using ReflexPlus.Injectables;
 
-namespace Reflex.Caching
+namespace ReflexPlus.Caching
 {
     internal static class TypeInfoCache
     {
         private const BindingFlags Flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
-        private static readonly List<InjectableFieldInfo> _fields = new();
-        private static readonly List<PropertyInfo> _properties = new();
-        private static readonly List<MethodInfo> _methods = new();
+        private static readonly List<InjectableFieldInfo> Fields = new();
 
-        private static readonly Dictionary<RegistrationId, TypeAttributeInfo> _dictionary = new();
-        
+        private static readonly List<PropertyInfo> Properties = new();
+
+        private static readonly List<MethodInfo> Methods = new();
+
+        private static readonly Dictionary<RegistrationId, TypeAttributeInfo> Dictionary = new();
+
         internal static TypeAttributeInfo Get(Type type, object key = null)
         {
             var registrationId = new RegistrationId(type, key);
-            if (!_dictionary.TryGetValue(registrationId, out var info))
+            if (!Dictionary.TryGetValue(registrationId, out var info))
             {
-                _fields.Clear();
-                _properties.Clear();
-                _methods.Clear();
-                Generate(type, key);
-                info = new TypeAttributeInfo(_fields.ToArray(), _properties.ToArray(), _methods.ToArray());
-                _dictionary.Add(registrationId, info);
+                Fields.Clear();
+                Properties.Clear();
+                Methods.Clear();
+                Generate(type);
+                info = new TypeAttributeInfo(Fields.ToArray(), Properties.ToArray(), Methods.ToArray());
+                Dictionary.Add(registrationId, info);
             }
-    
+
             return info;
         }
-        
-        private static void Generate(Type type, object key)
+
+        private static void Generate(Type type)
         {
             var fields = type
                 .GetFields(Flags)
@@ -43,7 +44,7 @@ namespace Reflex.Caching
             foreach (var field in fields)
             {
                 var attribute = field.GetCustomAttribute<InjectAttribute>();
-                var registrationId = new RegistrationId(field.FieldType, key);
+                var registrationId = new RegistrationId(field.FieldType, attribute.Name);
                 var injectableField = new InjectableFieldInfo(registrationId, field, attribute.Optional);
                 injectableFields.Add(injectableField);
             }
@@ -55,14 +56,14 @@ namespace Reflex.Caching
             var methods = type
                 .GetMethods(Flags)
                 .Where(m => m.IsDefined(typeof(InjectAttribute)));
-            
-            _fields.AddRange(injectableFields);
-            _properties.AddRange(properties);
-            _methods.AddRange(methods);
+
+            Fields.AddRange(injectableFields);
+            Properties.AddRange(properties);
+            Methods.AddRange(methods);
 
             if (type.BaseType != null)
             {
-                Generate(type.BaseType, key);
+                Generate(type.BaseType);
             }
         }
     }

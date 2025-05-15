@@ -1,33 +1,34 @@
-using Reflex.Core;
-using Reflex.Enums;
-using Reflex.Generics;
+using ReflexPlus.Core;
 
-namespace Reflex.Resolvers
+namespace ReflexPlus.Resolvers
 {
     internal sealed class SingletonValueResolver : IResolver
     {
-        private readonly object _value;
-        private readonly DisposableCollection _disposables = new();
-        public Lifetime Lifetime => Lifetime.Singleton;
-        public Resolution Resolution => Resolution.Lazy;
+        private readonly DisposableCollection disposables = new();
+        
+        private readonly object value;
 
         public SingletonValueResolver(object value)
         {
             Diagnosis.RegisterCallSite(this);
             Diagnosis.RegisterInstance(this, value);
-            _value = value;
-            _disposables.TryAdd(value);
+            this.value = value;
+            disposables.TryAdd(value);
         }
+        
+        public Lifetime Lifetime => Lifetime.Singleton;
+
+        public Resolution Resolution => Resolution.Lazy;
 
         public object Resolve(Container container)
         {
             Diagnosis.IncrementResolutions(this);
-            return _value;
+            return value;
         }
 
         public void Dispose()
         {
-            _disposables.Dispose();
+            disposables.Dispose();
         }
     }
 }

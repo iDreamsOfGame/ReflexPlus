@@ -1,9 +1,8 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Reflex.Delegates;
 
-namespace Reflex.Reflectors
+namespace ReflexPlus.Reflectors
 {
     internal sealed class MonoActivatorFactory : IActivatorFactory
     {
@@ -23,14 +22,14 @@ namespace Reflex.Reflectors
 
             var newExpression = Expression.New(constructor, argumentsExpressions);
             var lambda = Expression.Lambda(typeof(ObjectActivator), Expression.Convert(newExpression, typeof(object)), param);
-            return (ObjectActivator) lambda.Compile();
+            return (ObjectActivator)lambda.Compile();
         }
 
         public ObjectActivator GenerateDefaultActivator(Type type)
         {
             var body = Expression.Convert(Expression.Default(type), typeof(object));
             var lambda = Expression.Lambda(typeof(ObjectActivator), body, Expression.Parameter(typeof(object[])));
-            return (ObjectActivator) lambda.Compile();
+            return (ObjectActivator)lambda.Compile();
         }
     }
 }

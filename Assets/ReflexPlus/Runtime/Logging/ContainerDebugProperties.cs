@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Reflex.Logging
+namespace ReflexPlus.Logging
 {
     public sealed class ContainerDebugProperties
     {

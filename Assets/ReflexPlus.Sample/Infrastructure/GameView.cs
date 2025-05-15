@@ -1,10 +1,10 @@
-﻿using Reflex.Attributes;
-using Reflex.Sample.Application;
+﻿using ReflexPlus.Attributes;
+using ReflexPlus.Sample.Application;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Reflex.Sample.Infrastructure
+namespace ReflexPlus.Sample.Infrastructure
 {
     internal class GameView : MonoBehaviour
     {
@@ -25,7 +25,7 @@ namespace Reflex.Sample.Infrastructure
         private void Reset()
         {
             _collectionStorage.Clear();
-            SceneManager.LoadScene("Reflex.Sample");
+            SceneManager.LoadScene("ReflexPlus.Sample");
         }
     }
 }

@@ -1,21 +1,21 @@
 ﻿using System;
-using Reflex.Injectors;
+using ReflexPlus.Injectors;
 
-namespace Reflex.Core
+namespace ReflexPlus.Core
 {
     public class ParentOverrideScope : IDisposable
     {
-        private readonly Container _parentOverride;
+        private readonly Container parentOverride;
 
         public ParentOverrideScope(Container parentOverride)
         {
-            _parentOverride = parentOverride;
-            UnityInjector.ContainerParentOverride.Push(_parentOverride);
+            this.parentOverride = parentOverride;
+            UnityInjector.ContainerParentOverride.Push(this.parentOverride);
         }
-        
+
         public void Dispose()
         {
-            if (UnityInjector.ContainerParentOverride.TryPop(out var popped) && popped == _parentOverride)
+            if (UnityInjector.ContainerParentOverride.TryPop(out var popped) && popped == parentOverride)
             {
                 // All good, we popped the correct parent override
             }

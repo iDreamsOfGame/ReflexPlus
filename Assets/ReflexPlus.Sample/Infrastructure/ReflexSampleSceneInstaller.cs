@@ -1,8 +1,8 @@
-﻿using Reflex.Core;
-using Reflex.Sample.Application;
+﻿using ReflexPlus.Core;
+using ReflexPlus.Sample.Application;
 using UnityEngine;
 
-namespace Reflex.Sample.Infrastructure
+namespace ReflexPlus.Sample.Infrastructure
 {
     internal class ReflexSampleSceneInstaller : MonoBehaviour, IInstaller
     {
