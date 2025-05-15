@@ -1,6 +1,6 @@
 <div align=center>   
 <p align="center">
-  <img src="Graphics\logo.png" width="500">
+  <img src="Graphics\logo.png" width="350">
 </p>
 
 
@@ -384,40 +384,40 @@ You can use it to inject fields, writeable properties and methods like following
 class Foo : MonoBehaviour  
 {  
 	[Inject]
-  private readonly IInputManager inputManager;
-  
-  [Inject(true)]
-  private readonly ISoundManager soundManager;
-  
-  [Inject("actors")]
-  private readonly IActorManager actorManager;
-  
+	private readonly IInputManager inputManager;
+	
+	[Inject(true)]
+	private readonly ISoundManager soundManager;
+	
+	[Inject("actors")]
+	private readonly IActorManager actorManager;
+	
 	[Inject]
-  public IEnumerable<IManager> Managers { get; private set; }
-  
-  [Inject(true)]
-  public ISoundManager SoundManager { get; private set; }
-  
-  [Inject("actors")]
-  public IActorManager ActorManager { get; private set; }
-  
+	public IEnumerable<IManager> Managers { get; private set; }
+	
+	[Inject(true)]
+	public ISoundManager SoundManager { get; private set; }
+	
+	[Inject("actors")]
+	public IActorManager ActorManager { get; private set; }
+	
 	[Inject]
 	private void Inject(IEnumerable<int> numbers) // Method name here does not matter  
 	{  
 	  ...
 	}
   
-  [Inject(true)]
-  private void Inject(ISoundManager manager)
-  {
+	[Inject(true)]
+	private void Inject(ISoundManager manager)
+	{
 	  ...
-  }
-  
-  [Inject("actors")]
-  private void Inject(IActorManager manager)
-  {
+	}
+	
+	[Inject("actors")]
+	private void Inject(IActorManager manager)
+	{
 	  ...
-  }
+	}
 }
 ```
 > Note that attribute injection also works on non-mono classes.
@@ -462,40 +462,40 @@ Should be used to inject fields, writeable properties and methods like following
 class Foo : MonoBehaviour  
 {  
 	[Inject]
-  private readonly IInputManager inputManager;
-  
-  [Inject(true)]
-  private readonly ISoundManager soundManager;
-  
-  [Inject("actors")]
-  private readonly IActorManager actorManager;
-  
+	private readonly IInputManager inputManager;
+	
+	[Inject(true)]
+	private readonly ISoundManager soundManager;
+	
+	[Inject("actors")]
+	private readonly IActorManager actorManager;
+	
 	[Inject]
-  public IEnumerable<IManager> Managers { get; private set; }
-  
-  [Inject(true)]
-  public ISoundManager SoundManager { get; private set; }
-  
-  [Inject("actors")]
-  public IActorManager ActorManager { get; private set; }
-  
+	public IEnumerable<IManager> Managers { get; private set; }
+	
+	[Inject(true)]
+	public ISoundManager SoundManager { get; private set; }
+	
+	[Inject("actors")]
+	public IActorManager ActorManager { get; private set; }
+	
 	[Inject]
 	private void Inject(IEnumerable<int> numbers) // Method name here does not matter  
 	{  
 	  ...
 	}
   
-  [Inject(true)]
-  private void Inject(ISoundManager manager)
-  {
+	[Inject(true)]
+	private void Inject(ISoundManager manager)
+	{
 	  ...
-  }
-  
-  [Inject("actors")]
-  private void Inject(IActorManager manager)
-  {
+	}
+	
+	[Inject("actors")]
+	private void Inject(IActorManager manager)
+	{
 	  ...
-  }
+	}
 }
 ```
 > Note that `InjectAttribute` also works on non-mono classes.
