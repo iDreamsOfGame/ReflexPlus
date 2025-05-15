@@ -2,6 +2,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using ReflexPlus.Attributes;
 using ReflexPlus.Core;
+using ReflexPlus.Exceptions;
 
 // ReSharper disable ClassNeverInstantiated.Local
 
@@ -26,11 +27,19 @@ namespace ReflexPlus.EditModeTests
             }
         }
         
-        private class FooInner
+        private class FieldFooInner
         {
+            [Inject(true)]
+            private readonly byte injectFieldOptional;
         }
 
-        private class Foo2
+        private class FieldFooInner2
+        {
+            [Inject]
+            private readonly byte injectField;
+        }
+
+        private class FieldFoo
         {
             [Inject]
             private readonly string injectedFieldValue;
@@ -39,18 +48,24 @@ namespace ReflexPlus.EditModeTests
             private readonly string injectedFieldValueWithKey;
 
             [Inject]
-            private readonly FooInner injectFieldType;
+            private readonly FieldFooInner injectedFieldType;
 
-            // [Inject("other")]
-            // private readonly FooInner injectFieldTypeWithKey;
+            [Inject("other")]
+            private readonly FieldFooInner injectedFieldTypeWithKey;
 
             public string InjectedFieldValue => injectedFieldValue;
 
             public string InjectedFieldValueWithKey => injectedFieldValueWithKey;
 
-            public FooInner InjectFieldType => injectFieldType;
+            public FieldFooInner InjectedFieldType => injectedFieldType;
 
-            // public FooInner InjectFieldTypeWithKey => injectFieldTypeWithKey;
+            public FieldFooInner InjectedFieldTypeWithKey => injectedFieldTypeWithKey;
+        }
+
+        private class FieldFoo2
+        {
+            [Inject]
+            private FieldFooInner2 injectedFieldType;
         }
 
         [Test]
@@ -87,16 +102,26 @@ namespace ReflexPlus.EditModeTests
             var container = new ContainerBuilder()
                 .RegisterValue("42")
                 .RegisterValue("43", "other")
-                // .RegisterType<FooInner>()
-                // .RegisterType(typeof(FooInner), "other")
-                .RegisterType<Foo2>()
+                .RegisterType<FieldFooInner>()
+                .RegisterType(typeof(FieldFooInner), "other")
+                .RegisterType<FieldFoo>()
                 .Build();
 
-            var foo = container.Single<Foo2>();
+            var foo = container.Single<FieldFoo>();
             Assert.NotNull(foo);
-            // Assert.AreNotEqual(foo.InjectFieldType, foo.InjectFieldTypeWithKey);
+            Assert.AreNotEqual(foo.InjectedFieldType, foo.InjectedFieldTypeWithKey);
             foo.InjectedFieldValue.Should().Be("42");
             foo.InjectedFieldValueWithKey.Should().Be("43");
+        }
+
+        [Test]
+        public void AddSingleton_ShouldRunAttributeInjectionOnFieldsMarkedByInjectAttributeWithoutOptional()
+        {
+            var container = new ContainerBuilder()
+                .RegisterType<FieldFoo2>()
+                .Build();
+            
+            Assert.Throws<FieldInjectorException>(() => container.Single<FieldFoo2>());
         }
     }
 }
