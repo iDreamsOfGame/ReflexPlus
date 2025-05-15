@@ -1,22 +1,20 @@
-using System.Linq;
-using System.Reflection;
 using ReflexPlus.Injectables;
 
 namespace ReflexPlus.Caching
 {
     internal sealed class TypeAttributeInfo
     {
-        public TypeAttributeInfo(InjectableFieldInfo[] injectableFields, InjectablePropertyInfo[] injectableProperties, MethodInfo[] injectableMethods)
+        public TypeAttributeInfo(InjectableFieldInfo[] injectableFields, InjectablePropertyInfo[] injectableProperties, InjectableMethodInfo[] injectableMethods)
         {
             InjectableFields = injectableFields;
             InjectableProperties = injectableProperties;
-            InjectableMethods = injectableMethods.Select(mi => new InjectedMethodInfo(mi)).ToArray();
+            InjectableMethods = injectableMethods;
         }
 
         public InjectableFieldInfo[] InjectableFields { get; }
 
         public InjectablePropertyInfo[] InjectableProperties { get; }
 
-        public InjectedMethodInfo[] InjectableMethods { get; }
+        public InjectableMethodInfo[] InjectableMethods { get; }
     }
 }

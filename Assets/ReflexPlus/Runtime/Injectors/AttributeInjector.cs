@@ -11,13 +11,7 @@ namespace ReflexPlus.Injectors
             var info = TypeInfoCache.Get(obj.GetType(), key);
             InjectIntoFields(info.InjectableFields, obj, container);
             InjectIntoProperties(info.InjectableProperties, obj, container);
-
-            var methods = info.InjectableMethods;
-            var methodCount = methods.Length;
-            for (var i = 0; i < methodCount; i++)
-            {
-                MethodInjector.Inject(methods[i], obj, container);
-            }
+            InjectIntoMethods(info.InjectableMethods, obj, container);
         }
 
         private static void InjectIntoFields(InjectableFieldInfo[] injectableFields, object obj, Container container)
@@ -25,11 +19,11 @@ namespace ReflexPlus.Injectors
             var fieldCount = injectableFields.Length;
             for (var i = 0; i < fieldCount; i++)
             {
-                var injectableFieldInfo = injectableFields[i];
-                var registrationId = injectableFieldInfo.RegistrationId;
-                var fieldInfo = injectableFieldInfo.FieldInfo;
-                var optional = injectableFieldInfo.Optional;
-                FieldInjector.Inject(fieldInfo, optional, registrationId.Key, obj, container);
+                var injectableField = injectableFields[i];
+                var key = injectableField.Key;
+                var fieldInfo = injectableField.FieldInfo;
+                var optional = injectableField.Optional;
+                FieldInjector.Inject(fieldInfo, optional, key, obj, container);
             }
         }
         
@@ -38,11 +32,21 @@ namespace ReflexPlus.Injectors
             var propertyCount = injectableProperties.Length;
             for (var i = 0; i < propertyCount; i++)
             {
-                var injectablePropertyInfo = injectableProperties[i];
-                var registrationId = injectablePropertyInfo.RegistrationId;
-                var propertyInfo = injectablePropertyInfo.PropertyInfo;
-                var optional = injectablePropertyInfo.Optional;
-                PropertyInjector.Inject(propertyInfo, optional, registrationId.Key, obj, container);
+                var injectableProperty = injectableProperties[i];
+                var key = injectableProperty.Key;
+                var propertyInfo = injectableProperty.PropertyInfo;
+                var optional = injectableProperty.Optional;
+                PropertyInjector.Inject(propertyInfo, optional, key, obj, container);
+            }
+        }
+
+        private static void InjectIntoMethods(InjectableMethodInfo[] injectableMethods, object obj, Container container)
+        {
+            var methodCount = injectableMethods.Length;
+            for (var i = 0; i < methodCount; i++)
+            {
+                var injectableMethod = injectableMethods[i];
+                MethodInjector.Inject(injectableMethod, obj, container);
             }
         }
     }

@@ -7,39 +7,39 @@ namespace ReflexPlus.Sample.Infrastructure
 {
     internal class CollectionStoragePrefs : ICollectionStorage
     {
-        private readonly HashSet<string> _storage;
+        private readonly HashSet<string> storage;
 
         public CollectionStoragePrefs()
         {
             var json = PlayerPrefs.GetString("collection-storage", "[]");
-            _storage = JsonConvert.DeserializeObject<HashSet<string>>(json);
+            storage = JsonConvert.DeserializeObject<HashSet<string>>(json);
         }
 
         public void Clear()
         {
-            _storage.Clear();
+            storage.Clear();
             Persist();
         }
 
         public void Add(string id)
         {
-            _storage.Add(id);
+            storage.Add(id);
             Persist();
         }
-        
+
         public int Count()
         {
-            return _storage.Count;
+            return storage.Count;
         }
 
         public bool IsCollected(string id)
         {
-            return _storage.Contains(id);
+            return storage.Contains(id);
         }
-        
+
         private void Persist()
         {
-            var json = JsonConvert.SerializeObject(_storage);
+            var json = JsonConvert.SerializeObject(storage);
             PlayerPrefs.SetString("collection-storage", json);
         }
     }

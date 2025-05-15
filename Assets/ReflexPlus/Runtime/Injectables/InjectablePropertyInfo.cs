@@ -4,14 +4,14 @@ namespace ReflexPlus.Injectables
 {
     public readonly struct InjectablePropertyInfo
     {
-        public InjectablePropertyInfo(RegistrationId registrationId, PropertyInfo propertyInfo, bool optional)
+        public InjectablePropertyInfo(object key, PropertyInfo propertyInfo, bool optional)
         {
-            RegistrationId = registrationId;
+            Key = key;
             PropertyInfo = propertyInfo;
             Optional = optional;
         }
 
-        public RegistrationId RegistrationId { get; }
+        public object Key { get; }
 
         public PropertyInfo PropertyInfo { get; }
 

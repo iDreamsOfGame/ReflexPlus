@@ -17,7 +17,7 @@ namespace ReflexPlus.Caching
 
         private static readonly List<InjectablePropertyInfo> Properties = new();
 
-        private static readonly List<MethodInfo> Methods = new();
+        private static readonly List<InjectableMethodInfo> Methods = new();
 
         private static readonly Dictionary<RegistrationId, TypeAttributeInfo> Dictionary = new();
 
@@ -39,41 +39,50 @@ namespace ReflexPlus.Caching
 
         private static void Generate(Type type)
         {
-            var fields = type
-                .GetFields(Flags)
-                .Where(f => f.IsDefined(typeof(InjectAttribute)));
-            var injectableFields = new List<InjectableFieldInfo>();
-            foreach (var field in fields)
+            while (true)
             {
-                var attribute = field.GetCustomAttribute<InjectAttribute>();
-                var registrationId = new RegistrationId(field.FieldType, attribute.Name);
-                var injectableField = new InjectableFieldInfo(registrationId, field, attribute.Optional);
-                injectableFields.Add(injectableField);
-            }
+                var fields = type.GetFields(Flags)
+                    .Where(f => f.IsDefined(typeof(InjectAttribute)));
+                var injectableFields = new List<InjectableFieldInfo>();
+                foreach (var field in fields)
+                {
+                    var attribute = field.GetCustomAttribute<InjectAttribute>();
+                    var injectableField = new InjectableFieldInfo(attribute.Name, field, attribute.Optional);
+                    injectableFields.Add(injectableField);
+                }
 
-            var properties = type
-                .GetProperties(Flags)
-                .Where(p => p.CanWrite && p.IsDefined(typeof(InjectAttribute)));
-            var injectableProperties = new List<InjectablePropertyInfo>();
-            foreach (var property in properties)
-            {
-                var attribute = property.GetCustomAttribute<InjectAttribute>();
-                var registrationId = new RegistrationId(property.PropertyType, attribute.Name);
-                var injectableProperty = new InjectablePropertyInfo(registrationId, property, attribute.Optional);
-                injectableProperties.Add(injectableProperty);
-            }
+                var properties = type.GetProperties(Flags)
+                    .Where(p => p.CanWrite && p.IsDefined(typeof(InjectAttribute)));
+                var injectableProperties = new List<InjectablePropertyInfo>();
+                foreach (var property in properties)
+                {
+                    var attribute = property.GetCustomAttribute<InjectAttribute>();
+                    var injectableProperty = new InjectablePropertyInfo(attribute.Name, property, attribute.Optional);
+                    injectableProperties.Add(injectableProperty);
+                }
 
-            var methods = type
-                .GetMethods(Flags)
-                .Where(m => m.IsDefined(typeof(InjectAttribute)));
+                var methods = type.GetMethods(Flags)
+                    .Where(m => m.IsDefined(typeof(InjectAttribute)));
+                var injectableMethods = new List<InjectableMethodInfo>();
+                foreach (var method in methods)
+                {
+                    var attribute = method.GetCustomAttribute<InjectAttribute>();
+                    var injectableMethod = new InjectableMethodInfo(attribute.Names, method, attribute.Optional);
+                    injectableMethods.Add(injectableMethod);
+                }
 
-            Fields.AddRange(injectableFields);
-            Properties.AddRange(injectableProperties);
-            Methods.AddRange(methods);
+                Fields.AddRange(injectableFields);
+                Properties.AddRange(injectableProperties);
+                Methods.AddRange(injectableMethods);
 
-            if (type.BaseType != null)
-            {
-                Generate(type.BaseType);
+                if (type.BaseType != null)
+                {
+                    type = type.BaseType;
+                }
+                else
+                {
+                    break;
+                }
             }
         }
     }

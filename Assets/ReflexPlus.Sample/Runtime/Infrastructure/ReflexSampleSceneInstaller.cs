@@ -1,17 +1,20 @@
 ﻿using ReflexPlus.Core;
 using ReflexPlus.Sample.Application;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace ReflexPlus.Sample.Infrastructure
 {
     internal class ReflexSampleSceneInstaller : MonoBehaviour, IInstaller
     {
-        [SerializeField] private CollectorConfigurationModel _collectorConfigurationModel;
+        [FormerlySerializedAs("_collectorConfigurationModel")]
+        [SerializeField]
+        private CollectorConfigurationModel collectorConfigurationModel;
 
         public void InstallBindings(ContainerBuilder containerBuilder)
         {
             InstallInput(containerBuilder, useMouse: false);
-            containerBuilder.RegisterValue(_collectorConfigurationModel);
+            containerBuilder.RegisterValue(collectorConfigurationModel);
             containerBuilder.RegisterType(typeof(CollectionStoragePrefs), new[] { typeof(ICollectionStorage) });
         }
 

@@ -30,13 +30,13 @@ namespace ReflexPlus.EditModeTests
         private class FieldFooInner
         {
             [Inject(true)]
-            private readonly byte injectFieldOptional;
+            private readonly byte injectedFieldOptional;
         }
 
         private class FieldFooInner2
         {
             [Inject]
-            private readonly byte injectField;
+            private readonly byte injectedField;
         }
 
         private class FieldFoo
@@ -71,13 +71,13 @@ namespace ReflexPlus.EditModeTests
         private class PropertyFooInner
         {
             [Inject(true)]
-            public byte InjectPropertyOptional { get; private set; }
+            public byte InjectedPropertyOptional { get; private set; }
         }
 
         private class PropertyFooInner2
         {
             [Inject]
-            public byte InjectProperty { get; private set; }
+            public byte InjectedProperty { get; private set; }
         }
 
         private class PropertyFoo
@@ -99,6 +99,55 @@ namespace ReflexPlus.EditModeTests
         {
             [Inject]
             public PropertyFooInner2 InjectedPropertyType { get; private set; }
+        }
+        
+        private class MethodFooInner
+        {
+            [Inject(true)]
+            private byte injectedFieldOptional;
+            
+            [Inject(true)]
+            public byte InjectedPropertyOptional { get; private set; }
+        }
+
+        private class MethodFooInner2
+        {
+            [Inject]
+            private byte injectedField;
+            
+            [Inject]
+            public byte InjectedProperty { get; private set; }
+        }
+
+        private class MethodFoo
+        {
+            public string InjectedValue1 { get; private set; }
+
+            public string InjectedValue2 { get; private set; }
+
+            public string InjectedValue3 { get; private set; }
+
+            public MethodFooInner InjectedType1 { get; private set; }
+
+            public MethodFooInner InjectedType2 { get; private set; }
+
+            public MethodFooInner InjectedType3 { get; private set; }
+
+            [Inject]
+            private void Inject1(string value1, MethodFooInner value2)
+            {
+                InjectedValue1 = value1;
+                InjectedType1 = value2;
+            }
+            
+            [Inject(null, 2, null, 2)]
+            private void Inject2(string value1, string value2, MethodFooInner value3, MethodFooInner value4)
+            {
+                InjectedValue2 = value1;
+                InjectedValue3 = value2;
+                InjectedType2 = value3;
+                InjectedType3 = value4;
+            }
         }
 
         [Test]
@@ -142,7 +191,7 @@ namespace ReflexPlus.EditModeTests
 
             var foo = container.Single<FieldFoo>();
             Assert.NotNull(foo);
-            Assert.AreNotEqual(foo.InjectedFieldType, foo.InjectedFieldTypeWithKey);
+            Assert.AreNotSame(foo.InjectedFieldType, foo.InjectedFieldTypeWithKey);
             foo.InjectedFieldValue.Should().Be("42");
             foo.InjectedFieldValueWithKey.Should().Be("43");
         }
@@ -170,7 +219,7 @@ namespace ReflexPlus.EditModeTests
             
             var foo = container.Single<PropertyFoo>();
             Assert.NotNull(foo);
-            Assert.AreNotEqual(foo.InjectedPropertyType, foo.InjectedPropertyTypeWithKey);
+            Assert.AreNotSame(foo.InjectedPropertyType, foo.InjectedPropertyTypeWithKey);
             foo.InjectedPropertyValue.Should().Be("42");
             foo.InjectedPropertyValueWithKey.Should().Be("43");
         }
@@ -183,6 +232,30 @@ namespace ReflexPlus.EditModeTests
                 .Build();
             
             Assert.Throws<PropertyInjectorException>(() => container.Single<PropertyFoo2>());
+        }
+
+        [Test]
+        public void AddSingleton_ShouldRunAttributeInjectionOnMethodsMarkedByInjectAttributeWithKey()
+        {
+            var container = new ContainerBuilder()
+                .RegisterValue("42")
+                .RegisterValue("43", 2)
+                .RegisterType<MethodFooInner>()
+                .RegisterType(typeof(MethodFooInner), 2)
+                .RegisterType<MethodFoo>()
+                .Build();
+            
+            var foo = container.Single<MethodFoo>();
+            Assert.NotNull(foo);
+            Assert.AreEqual(foo.InjectedValue1, "42");
+            Assert.AreEqual(foo.InjectedValue2, "42");
+            Assert.AreEqual(foo.InjectedValue3, "43");
+            Assert.NotNull(foo.InjectedType1);
+            Assert.NotNull(foo.InjectedType2);
+            Assert.NotNull(foo.InjectedType3);
+            Assert.AreSame(foo.InjectedType1, foo.InjectedType2);
+            Assert.AreNotSame(foo.InjectedType1, foo.InjectedType3);
+            Assert.AreNotSame(foo.InjectedType2, foo.InjectedType3);
         }
     }
 }

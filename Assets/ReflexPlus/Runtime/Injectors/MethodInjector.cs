@@ -1,7 +1,7 @@
 using System;
-using ReflexPlus.Caching;
 using ReflexPlus.Core;
 using ReflexPlus.Exceptions;
+using ReflexPlus.Injectables;
 
 namespace ReflexPlus.Injectors
 {
@@ -12,8 +12,11 @@ namespace ReflexPlus.Injectors
 
         private static SizeSpecificArrayPool<object> ArrayPool => arrayPool ??= new SizeSpecificArrayPool<object>(maxLength: 16);
 
-        internal static void Inject(InjectedMethodInfo method, object instance, Container container)
+        internal static void Inject(InjectableMethodInfo method, object instance, Container container)
         {
+            var optional = method.Optional;
+            var keys = method.Keys ?? Array.Empty<object>();
+            var keysLength = keys.Length;
             var methodParameters = method.Parameters;
             var methodParametersLength = methodParameters.Length;
             var arguments = ArrayPool.Rent(methodParametersLength);
@@ -22,14 +25,16 @@ namespace ReflexPlus.Injectors
             {
                 for (var i = 0; i < methodParametersLength; i++)
                 {
-                    arguments[i] = container.Resolve(methodParameters[i].ParameterType);
+                    var key = i < keysLength ? keys[i] : null;
+                    arguments[i] = container.Resolve(methodParameters[i].ParameterType, optional, key);
                 }
 
                 method.MethodInfo.Invoke(instance, arguments);
             }
             catch (Exception e)
             {
-                throw new MethodInjectorException(instance, method.MethodInfo, e);
+                if (!optional) 
+                    throw new MethodInjectorException(instance, method.MethodInfo, e);
             }
             finally
             {
