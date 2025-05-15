@@ -368,7 +368,7 @@ private class Foo
 {  
   ...
 
-    public Foo(IInputManager inputManager, IEnumerable<IManager> managers)  
+  public Foo(IInputManager inputManager, IEnumerable<IManager> managers)  
   {  
     ...
   }  
