@@ -10,18 +10,48 @@ namespace ReflexPlus.EditModeTests
 {
     internal class InjectAttributeTests
     {
-        private class Foo
+        private interface IFoo
         {
-            [Inject]
-            public readonly int InjectedFieldValue;
+            int InjectedFieldValue { get; }
 
-            [Inject]
+            int InjectedPropertyValue { get; }
+
+            int InjectedMethodValue { get; }
+        }
+        
+        private class Foo : IFoo
+        {
+            [Inject(true)]
+            private readonly int injectedFieldValue;
+
+            [Inject(true)]
             public int InjectedPropertyValue { get; private set; }
+
+            public int InjectedFieldValue => injectedFieldValue;
 
             public int InjectedMethodValue { get; private set; }
 
-            [Inject]
+            [Inject(true)]
             private void Inject(int value)
+            {
+                InjectedMethodValue = value;
+            }
+        }
+        
+        private class Foo2
+        {
+            [Inject]
+            private IFoo injectedFieldValue;
+
+            [Inject]
+            public IFoo InjectedPropertyValue { get; private set; }
+
+            public IFoo InjectedFieldValue => injectedFieldValue;
+
+            public IFoo InjectedMethodValue { get; private set; }
+
+            [Inject]
+            private void Inject(IFoo value)
             {
                 InjectedMethodValue = value;
             }
@@ -151,7 +181,7 @@ namespace ReflexPlus.EditModeTests
         }
 
         [Test]
-        public void AddSingleton_ShouldRunAttributeInjectionOnFieldsPropertiesAndMethodsMarkedWithInjectAttribute()
+        public void AddSingleton_ShouldRunAttributeInjectionOnFieldsPropertiesAndMethodsMarkedByInjectAttribute()
         {
             var container = new ContainerBuilder()
                 .RegisterValue(42)
@@ -165,17 +195,42 @@ namespace ReflexPlus.EditModeTests
         }
 
         [Test]
-        public void AddTransient_ShouldRunAttributeInjectionOnFieldsPropertiesAndMethodsMarkedWithInjectAttribute()
+        public void AddSingleton_ShouldRunInterfaceAttributeInjectionOnFieldsPropertiesAndMethodsMarkedByInjectAttribute()
         {
             var container = new ContainerBuilder()
-                .RegisterValue(42)
-                .RegisterType(typeof(Foo))
+                .RegisterType<Foo>(new[] { typeof(IFoo) })
+                .RegisterType<Foo2>()
                 .Build();
 
-            var foo = container.Single<Foo>();
-            foo.InjectedFieldValue.Should().Be(42);
-            foo.InjectedPropertyValue.Should().Be(42);
-            foo.InjectedMethodValue.Should().Be(42);
+            var foo2 = container.Single<Foo2>();
+            Assert.NotNull(foo2);
+            Assert.NotNull(foo2.InjectedFieldValue);
+            Assert.NotNull(foo2.InjectedPropertyValue);
+            Assert.NotNull(foo2.InjectedMethodValue);
+            Assert.AreSame(foo2.InjectedFieldValue, foo2.InjectedPropertyValue);
+            Assert.AreSame(foo2.InjectedFieldValue, foo2.InjectedMethodValue);
+        }
+
+        [Test]
+        public void AddSingleton_BuildContainerMoreThanOnce()
+        {
+            var builder = new ContainerBuilder();
+            var container = builder
+                .RegisterValue(42)
+                .RegisterType<Foo>(new[] { typeof(IFoo) })
+                .Build();
+            
+            var foo = container.Single<IFoo>();
+            Assert.NotNull(foo);
+            Assert.AreEqual(42, foo.InjectedFieldValue);
+
+            container = builder.SetParent(container)
+                .RegisterType<Foo2>()
+                .Build();
+            
+            var foo2 = container.Single<Foo2>();
+            Assert.NotNull(foo2);
+            Assert.AreSame(foo, foo2.InjectedFieldValue);
         }
 
         [Test]
@@ -256,6 +311,20 @@ namespace ReflexPlus.EditModeTests
             Assert.AreSame(foo.InjectedType1, foo.InjectedType2);
             Assert.AreNotSame(foo.InjectedType1, foo.InjectedType3);
             Assert.AreNotSame(foo.InjectedType2, foo.InjectedType3);
+        }
+        
+        [Test]
+        public void AddTransient_ShouldRunAttributeInjectionOnFieldsPropertiesAndMethodsMarkedWithInjectAttribute()
+        {
+            var container = new ContainerBuilder()
+                .RegisterValue(42)
+                .RegisterType(typeof(Foo))
+                .Build();
+
+            var foo = container.Single<Foo>();
+            foo.InjectedFieldValue.Should().Be(42);
+            foo.InjectedPropertyValue.Should().Be(42);
+            foo.InjectedMethodValue.Should().Be(42);
         }
     }
 }

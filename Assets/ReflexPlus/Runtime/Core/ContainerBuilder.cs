@@ -81,7 +81,7 @@ namespace ReflexPlus.Core
             {
                 var selfEagerResolvers = Bindings
                     .Select(b => b.Resolver)
-                    .Where(r => r.Resolution == Resolution.Eager && (r.Lifetime is Lifetime.Singleton or Lifetime.Scoped));
+                    .Where(r => r.Resolution == Resolution.Eager && r.Lifetime is Lifetime.Singleton or Lifetime.Scoped);
 
                 foreach (var resolver in selfEagerResolvers)
                 {
