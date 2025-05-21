@@ -126,9 +126,43 @@ namespace ReflexPlus.EditModeTests
         [Test]
         public void HasBinding_ShouldTrue()
         {
-            var value = Debug.unityLogger;
+            var value = SystemInfo.deviceType;
             var builder = new ContainerBuilder().RegisterValue(value);
             builder.HasBinding(value.GetType()).Should().BeTrue();
+        }
+
+        [Test]
+        public void Unbind_ShouldTrue()
+        {
+            var value = SystemInfo.deviceType;
+            var builder = new ContainerBuilder().RegisterValue(value);
+            builder.Unbind(value.GetType()).Should().BeTrue();
+        }
+
+        [Test]
+        public void Unbind_RegisterValueWithKey_ReturnTrue()
+        {
+            const string key = nameof(SystemInfo.deviceType);
+            var value = SystemInfo.deviceType;
+            var builder = new ContainerBuilder().RegisterValue(value, key);
+            builder.Unbind(value.GetType(), key).Should().BeTrue();
+        }
+
+        [Test]
+        public void Unbind_RegisterValueWithContract_ReturnTrue()
+        {
+            var value = Debug.unityLogger;
+            var builder = new ContainerBuilder().RegisterValue<ILogger>(value);
+            builder.Unbind<ILogger>().Should().BeTrue();
+        }
+
+        [Test]
+        public void Unbind_RegisterValueWithContractAndKey_ReturnTrue()
+        {
+            const string key = nameof(Debug.unityLogger);
+            var value = Debug.unityLogger;
+            var builder = new ContainerBuilder().RegisterValue<ILogger>(value, key);
+            builder.Unbind<ILogger>(key).Should().BeTrue();
         }
 
         [Test]

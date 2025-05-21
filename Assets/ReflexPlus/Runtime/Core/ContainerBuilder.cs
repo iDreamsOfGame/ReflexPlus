@@ -120,84 +120,127 @@ namespace ReflexPlus.Core
             return this;
         }
 
-        public bool HasBinding(Type contract)
+        public bool HasBinding<TContract>(object key = null)
         {
-            return Bindings.Any(binding => binding.Contracts.Contains(contract));
+            return HasBinding(typeof(TContract), key);
         }
 
-        public ContainerBuilder RegisterType<TConcrete>(object key, Lifetime lifetime = Lifetime.Singleton, Resolution resolution = Resolution.Lazy)
+        public bool HasBinding(Type contract, object key = null)
+        {
+            return Bindings.Any(binding => binding.Key == key 
+                                           && (binding.Contract == contract || (binding.Contracts != null && binding.Contracts.Contains(contract))));
+        }
+
+        public bool Unbind<TContract>(object key = null)
+        {
+            return Unbind(typeof(TContract), key);
+        }
+
+        public bool Unbind(Type contract, object key = null)
+        {
+            var result = Bindings.RemoveAll(binding => binding.Key == key 
+                                                       && (binding.Contract == contract || (binding.Contracts != null && binding.Contracts.Contains(contract))));
+            return result > 0;
+        }
+
+        public ContainerBuilder RegisterType<TConcrete>(Lifetime lifetime, Resolution resolution = Resolution.Lazy)
+        {
+            return RegisterType<TConcrete>(typeof(TConcrete), null, lifetime, resolution);
+        }
+
+        public ContainerBuilder RegisterType<TConcrete>(object key = null, Lifetime lifetime = Lifetime.Singleton, Resolution resolution = Resolution.Lazy)
         {
             return RegisterType(typeof(TConcrete), key, lifetime, resolution);
         }
-
-        public ContainerBuilder RegisterType<TConcrete>(Lifetime lifetime = Lifetime.Singleton, Resolution resolution = Resolution.Lazy)
+        
+        public ContainerBuilder RegisterType<TConcrete>(Type contract,
+            Lifetime lifetime,
+            Resolution resolution = Resolution.Lazy)
         {
-            return RegisterType(typeof(TConcrete), lifetime, resolution);
+            return RegisterType(typeof(TConcrete), contract, null, lifetime, resolution);
+        }
+
+        public ContainerBuilder RegisterType<TConcrete>(Type contract,
+            object key = null,
+            Lifetime lifetime = Lifetime.Singleton,
+            Resolution resolution = Resolution.Lazy)
+        {
+            return RegisterType(typeof(TConcrete), contract, key, lifetime, resolution);
         }
 
         public ContainerBuilder RegisterType<TConcrete>(Type[] contracts,
-            Lifetime lifetime = Lifetime.Singleton,
+            Lifetime lifetime,
             Resolution resolution = Resolution.Lazy)
         {
             return RegisterType<TConcrete>(contracts, null, lifetime, resolution);
         }
 
         public ContainerBuilder RegisterType<TConcrete>(Type[] contracts,
-            object key,
+            object key = null,
             Lifetime lifetime = Lifetime.Singleton,
             Resolution resolution = Resolution.Lazy)
         {
             return RegisterType(typeof(TConcrete), contracts, key, lifetime, resolution);
         }
 
-        public ContainerBuilder RegisterType<TConcrete, TContract>(Lifetime lifetime = Lifetime.Singleton, Resolution resolution = Resolution.Lazy)
+        public ContainerBuilder RegisterType<TConcrete, TContract>(Lifetime lifetime, Resolution resolution = Resolution.Lazy)
         {
             return RegisterType<TConcrete, TContract>(null, lifetime, resolution);
         }
-        
-        public ContainerBuilder RegisterType<TConcrete, TContract>(object key, Lifetime lifetime = Lifetime.Singleton, Resolution resolution = Resolution.Lazy)
+
+        public ContainerBuilder RegisterType<TConcrete, TContract>(object key = null, Lifetime lifetime = Lifetime.Singleton, Resolution resolution = Resolution.Lazy)
         {
             return RegisterType(typeof(TConcrete), typeof(TContract), key, lifetime, resolution);
         }
 
         public ContainerBuilder RegisterType(Type type,
-            object key,
+            Lifetime lifetime,
+            Resolution resolution = Resolution.Lazy)
+        {
+            return RegisterType(type, type, null, lifetime, resolution);
+        }
+
+        public ContainerBuilder RegisterType(Type type,
+            object key = null,
             Lifetime lifetime = Lifetime.Singleton,
             Resolution resolution = Resolution.Lazy)
         {
             return RegisterType(type, type, key, lifetime, resolution);
         }
 
-        public ContainerBuilder RegisterType(Type type, Lifetime lifetime = Lifetime.Singleton, Resolution resolution = Resolution.Lazy)
-        {
-            return RegisterType(type, type, null, lifetime, resolution);
-        }
-
         public ContainerBuilder RegisterType(Type type,
-            Type[] contracts,
-            Lifetime lifetime = Lifetime.Singleton,
+            Type contract,
+            Lifetime lifetime,
             Resolution resolution = Resolution.Lazy)
         {
-            return RegisterType(type, contracts, null, lifetime, resolution);
+            return RegisterType(type, contract, null, lifetime, resolution);
         }
 
         public ContainerBuilder RegisterType(Type type,
             Type contract,
-            object key,
+            object key = null,
             Lifetime lifetime = Lifetime.Singleton,
             Resolution resolution = Resolution.Lazy)
         {
             Assert.IsNotNull(type);
             Assert.IsTrue(contract != null);
             Assert.IsFalse(lifetime == Lifetime.Transient && resolution == Resolution.Eager, "Type registration Lifetime.Transient + Resolution.Eager not allowed");
-            
+
             var resolver = GetResolver(type, key, lifetime, resolution);
             return Add(type, contract, key, resolver);
         }
 
         public ContainerBuilder RegisterType(Type type,
             Type[] contracts,
-            object key,
+            Lifetime lifetime,
+            Resolution resolution = Resolution.Lazy)
+        {
+            return RegisterType(type, contracts, null, lifetime, resolution);
+        }
+
+        public ContainerBuilder RegisterType(Type type,
+            Type[] contracts,
+            object key = null,
             Lifetime lifetime = Lifetime.Singleton,
             Resolution resolution = Resolution.Lazy)
         {
@@ -209,9 +252,21 @@ namespace ReflexPlus.Core
             return Add(type, contracts, key, resolver);
         }
 
+        public ContainerBuilder RegisterValue<TContract>(object value, object key = null)
+        {
+            return RegisterValue(value, typeof(TContract), key);
+        }
+
         public ContainerBuilder RegisterValue(object value, object key = null)
         {
-            return RegisterValue(value, new[] { value.GetType() }, key);
+            return RegisterValue(value, value.GetType(), key);
+        }
+
+        public ContainerBuilder RegisterValue(object value, Type contract, object key = null)
+        {
+            Assert.IsTrue(contract != null);
+            var resolver = new SingletonValueResolver(value);
+            return Add(value.GetType(), contract, key, resolver);
         }
 
         public ContainerBuilder RegisterValue(object value, Type[] contracts, object key = null)
@@ -221,13 +276,69 @@ namespace ReflexPlus.Core
             return Add(value.GetType(), contracts, key, resolver);
         }
 
-        public ContainerBuilder RegisterFactory<TConcrete>(Func<Container, TConcrete> factory, Lifetime lifetime = Lifetime.Singleton, Resolution resolution = Resolution.Lazy)
+        public ContainerBuilder RegisterFactory<TConcrete>(Func<Container, TConcrete> factory,
+            Lifetime lifetime,
+            Resolution resolution = Resolution.Lazy)
         {
-            return RegisterFactory(factory, new[] { typeof(TConcrete) }, lifetime, resolution);
+            return RegisterFactory(factory, typeof(TConcrete), null, lifetime, resolution);
+        }
+
+        public ContainerBuilder RegisterFactory<TConcrete>(Func<Container, TConcrete> factory,
+            object key = null,
+            Lifetime lifetime = Lifetime.Singleton,
+            Resolution resolution = Resolution.Lazy)
+        {
+            return RegisterFactory(factory, typeof(TConcrete), key, lifetime, resolution);
+        }
+
+        public ContainerBuilder RegisterFactory<TConcrete, TContract>(Func<Container, TConcrete> factory,
+            Lifetime lifetime,
+            Resolution resolution = Resolution.Lazy)
+        {
+            return RegisterFactory<TConcrete, TContract>(factory, null, lifetime, resolution);
+        }
+
+        public ContainerBuilder RegisterFactory<TConcrete, TContract>(Func<Container, TConcrete> factory,
+            object key = null,
+            Lifetime lifetime = Lifetime.Singleton,
+            Resolution resolution = Resolution.Lazy)
+        {
+            return RegisterFactory(factory, typeof(TContract), key, lifetime, resolution);
+        }
+
+        public ContainerBuilder RegisterFactory<TConcrete>(Func<Container, TConcrete> factory,
+            Type contract,
+            Lifetime lifetime,
+            Resolution resolution = Resolution.Lazy)
+        {
+            return RegisterFactory(factory, contract, null, lifetime, resolution);
+        }
+
+        public ContainerBuilder RegisterFactory<TConcrete>(Func<Container, TConcrete> factory,
+            Type contract,
+            object key = null,
+            Lifetime lifetime = Lifetime.Singleton,
+            Resolution resolution = Resolution.Lazy)
+        {
+            Assert.IsNotNull(factory);
+            Assert.IsTrue(contract != null);
+            Assert.IsFalse(lifetime == Lifetime.Transient && resolution == Resolution.Eager, "Factory registration Lifetime.Transient + Resolution.Eager not allowed");
+
+            var resolver = GetResolver(factory, lifetime, resolution);
+            return Add(typeof(TConcrete), contract, key, resolver);
         }
 
         public ContainerBuilder RegisterFactory<TConcrete>(Func<Container, TConcrete> factory,
             Type[] contracts,
+            Lifetime lifetime,
+            Resolution resolution = Resolution.Lazy)
+        {
+            return RegisterFactory(factory, contracts, null, lifetime, resolution);
+        }
+
+        public ContainerBuilder RegisterFactory<TConcrete>(Func<Container, TConcrete> factory,
+            Type[] contracts,
+            object key = null,
             Lifetime lifetime = Lifetime.Singleton,
             Resolution resolution = Resolution.Lazy)
         {
@@ -235,22 +346,10 @@ namespace ReflexPlus.Core
             Assert.IsTrue(contracts != null && contracts.Length > 0);
             Assert.IsFalse(lifetime == Lifetime.Transient && resolution == Resolution.Eager, "Factory registration Lifetime.Transient + Resolution.Eager not allowed");
 
-            IResolver resolver = lifetime switch
-            {
-                Lifetime.Singleton => new SingletonFactoryResolver(TypelessFactory, resolution),
-                Lifetime.Transient => new TransientFactoryResolver(TypelessFactory),
-                Lifetime.Scoped => new ScopedFactoryResolver(TypelessFactory, resolution),
-                _ => throw new ArgumentOutOfRangeException(nameof(lifetime), lifetime, "Unhandled lifetime in ContainerBuilder.RegisterFactory() method.")
-            };
-
-            return Add(typeof(TConcrete), contracts, null, resolver);
-
-            object TypelessFactory(Container container)
-            {
-                return factory.Invoke(container);
-            }
+            var resolver = GetResolver(factory, lifetime, resolution);
+            return Add(typeof(TConcrete), contracts, key, resolver);
         }
-        
+
         private static IResolver GetResolver(Type type,
             object key,
             Lifetime lifetime = Lifetime.Singleton,
@@ -266,7 +365,27 @@ namespace ReflexPlus.Core
 
             return resolver;
         }
-        
+
+        private static IResolver GetResolver<TConcrete>(Func<Container, TConcrete> factory,
+            Lifetime lifetime = Lifetime.Singleton,
+            Resolution resolution = Resolution.Lazy)
+        {
+            IResolver resolver = lifetime switch
+            {
+                Lifetime.Singleton => new SingletonFactoryResolver(TypelessFactory, resolution),
+                Lifetime.Transient => new TransientFactoryResolver(TypelessFactory),
+                Lifetime.Scoped => new ScopedFactoryResolver(TypelessFactory, resolution),
+                _ => throw new ArgumentOutOfRangeException(nameof(lifetime), lifetime, "Unhandled lifetime in ContainerBuilder.RegisterFactory() method.")
+            };
+
+            return resolver;
+
+            object TypelessFactory(Container container)
+            {
+                return factory.Invoke(container);
+            }
+        }
+
         private ContainerBuilder Add(Type concrete,
             Type contract,
             object key,

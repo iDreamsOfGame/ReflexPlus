@@ -46,6 +46,28 @@ namespace ReflexPlus.Core
             return ResolversByContract.ContainsKey(registrationId);
         }
 
+        public bool Unbind<T>(object key = null)
+        {
+            return Unbind(typeof(T), key);
+        }
+
+        public bool Unbind(Type type, object key = null)
+        {
+            var registrationId = new RegistrationId(type, key);
+            if (ResolversByContract.TryGetValue(registrationId, out var resolvers))
+            {
+                if (resolvers != null)
+                {
+                    foreach (var resolver in resolvers)
+                    {
+                        resolver.Dispose();
+                    }
+                }
+            }
+            
+            return ResolversByContract.Remove(registrationId);
+        }
+
         public void Dispose()
         {
             foreach (var child in Children.Reversed())

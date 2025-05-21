@@ -11,11 +11,11 @@ namespace ReflexPlus.Benchmark
         private void Start()
         {
             container = new ContainerBuilder()
-                .RegisterType(typeof(A), new[] { typeof(IA) }, Lifetime.Transient)
-                .RegisterType(typeof(B), new[] { typeof(IB) }, Lifetime.Transient)
-                .RegisterType(typeof(C), new[] { typeof(IC) }, Lifetime.Transient)
-                .RegisterType(typeof(D), new[] { typeof(ID) }, Lifetime.Transient)
-                .RegisterType(typeof(E), new[] { typeof(IE) }, Lifetime.Transient)
+                .RegisterType(typeof(A), typeof(IA), Lifetime.Transient)
+                .RegisterType(typeof(B), typeof(IB), Lifetime.Transient)
+                .RegisterType(typeof(C), typeof(IC), Lifetime.Transient)
+                .RegisterType(typeof(D), typeof(ID), Lifetime.Transient)
+                .RegisterType(typeof(E), typeof(IE), Lifetime.Transient)
                 .Build();
         }
 

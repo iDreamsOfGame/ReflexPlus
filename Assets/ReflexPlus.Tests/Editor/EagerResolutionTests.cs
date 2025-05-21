@@ -26,7 +26,7 @@ namespace ReflexPlus.EditModeTests
             Service.OnServiceConstructed += OnServiceConstructed;
 
             var container = new ContainerBuilder()
-                .RegisterType(typeof(Service), Lifetime.Singleton, Resolution.Eager)
+                .RegisterType<Service>(Lifetime.Singleton, Resolution.Eager)
                 .Build();
 
             Service.OnServiceConstructed -= OnServiceConstructed;

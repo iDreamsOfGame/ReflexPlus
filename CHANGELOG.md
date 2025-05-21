@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+## [1.0.2] - 2025-05-21
+
+### Changed
+
+- Adds method **Unbind** in class **Container** to unbind **Type** binding.
+- Adds mehtod **Unbind** in class **ContainerBuilder** to unbind **Type** binding before **Build**.
+
+
+
 ## [1.0.1] - 2025-05-21
 
 ### Changed

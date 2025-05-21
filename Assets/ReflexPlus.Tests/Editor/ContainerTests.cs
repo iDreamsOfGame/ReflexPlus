@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 using ReflexPlus.Core;
@@ -266,6 +267,43 @@ namespace ReflexPlus.EditModeTests
         {
             var container = new ContainerBuilder().RegisterValue(42).Build();
             container.HasBinding<int>().Should().BeTrue();
+        }
+
+        [Test]
+        public void Unbind_ReturnFalseWhenBindingIsNotDefined()
+        {
+            var container = new ContainerBuilder().Build();
+            container.Unbind(typeof(int)).Should().BeFalse();
+        }
+        
+        [Test]
+        public void Unbind_ReturnTrueWhenBindingIsDefined()
+        {
+            var container = new ContainerBuilder().RegisterValue(42).Build();
+            container.Unbind<int>().Should().BeTrue();
+        }
+
+        [Test]
+        public void Unbind_RegisterValueWithKey_ReturnTrueWhenBindingIsDefined()
+        {
+            const string key = "42";
+            var container = new ContainerBuilder().RegisterValue(42, key).Build();
+            container.Unbind<int>(key).Should().BeTrue();
+        }
+        
+        [Test]
+        public void Unbind_RegisterValueWithContract_ReturnTrueWhenBindingIsDefined()
+        {
+            var container = new ContainerBuilder().RegisterValue<IList<int>>(new List<int> { 1, 2, 3 }).Build();
+            container.Unbind<IList<int>>().Should().BeTrue();
+        }
+
+        [Test]
+        public void Unbind_RegisterValueWithContractAndKey_ReturnTrueWhenBindingIsDefined()
+        {
+            const string key = "numbers";
+            var container = new ContainerBuilder().RegisterValue<IList<int>>(new List<int> { 1, 2, 3 }, key).Build();
+            container.Unbind<IList<int>>(key).Should().BeTrue();
         }
     }
 }
