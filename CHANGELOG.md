@@ -6,7 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-## [1.0.0] - 2020-04-21
+## [1.0.1] - 2025-05-21
+
+### Changed
+
+- Adds new overloading methods **RegisterType** in class **ContainerBuilder**.
+- **Binding** can be created with only one contract **Type** to improve performance.
+
+
+
+## [1.0.0] - 2025-05-16
 ### Added
 
  - Attribute **Inject** supports optional binding that no excetion throw on no **Type** registration.

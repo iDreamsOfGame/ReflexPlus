@@ -198,7 +198,7 @@ namespace ReflexPlus.EditModeTests
         public void AddSingleton_ShouldRunInterfaceAttributeInjectionOnFieldsPropertiesAndMethodsMarkedByInjectAttribute()
         {
             var container = new ContainerBuilder()
-                .RegisterType<Foo>(new[] { typeof(IFoo) })
+                .RegisterType<Foo, IFoo>()
                 .RegisterType<Foo2>()
                 .Build();
 
@@ -217,7 +217,7 @@ namespace ReflexPlus.EditModeTests
             var builder = new ContainerBuilder();
             var container = builder
                 .RegisterValue(42)
-                .RegisterType<Foo>(new[] { typeof(IFoo) })
+                .RegisterType<Foo, IFoo>()
                 .Build();
             
             var foo = container.Single<IFoo>();
