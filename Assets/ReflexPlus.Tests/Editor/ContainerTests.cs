@@ -36,7 +36,15 @@ namespace ReflexPlus.EditModeTests
         }
 
         [Test]
-        public void Resolve_ValueTypeSingleton_ShouldReturn42()
+        public void Construct_GetInstanceOfUnregisteredType_ReturnsNotNull()
+        {
+            var container = new ContainerBuilder().Build();
+            var valuable = container.Construct<Valuable>();
+            Assert.That(valuable, Is.Not.Null);
+        }
+
+        [Test]
+        public void Resolve_ValueTypeSingleton_ShouldReturnsCorrectValue()
         {
             var container = new ContainerBuilder()
                 .RegisterValue(42)

@@ -739,7 +739,7 @@ PlayerSettings:
   webGLDecompressionFallback: 0
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Standalone: 
+    Standalone: ENABLE_IL2CPP
     WebGL: REFLEX_DEBUG
   additionalCompilerArguments: {}
   platformArchitecture: {}

@@ -134,7 +134,8 @@ namespace ReflexPlus.Core
 
         public object Single(Type type, bool optional = false, object key = null)
         {
-            return GetResolvers(type, optional, key).Single().Resolve(this);
+            var resolvers = GetResolvers(type, optional, key);
+            return resolvers is { Count: > 0 } ? resolvers.Single().Resolve(this) : null;
         }
 
         public IEnumerable<object> All(Type contract, object key = null)
@@ -153,7 +154,7 @@ namespace ReflexPlus.Core
                 : Enumerable.Empty<TContract>();
         }
 
-        private IEnumerable<IResolver> GetResolvers(Type contract, bool optional = false, object key = null)
+        private List<IResolver> GetResolvers(Type contract, bool optional = false, object key = null)
         {
             var registrationId = new RegistrationId(contract, key);
             if (ResolversByContract.TryGetValue(registrationId, out var resolvers))

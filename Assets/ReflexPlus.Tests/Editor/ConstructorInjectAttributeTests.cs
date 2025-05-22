@@ -103,7 +103,7 @@ namespace ReflexPlus.EditModeTests
         }
 
         [Test]
-        public void ConstructorInjectorException()
+        public void ConstructorInjector_ThrowsException()
         {
             var container = new ContainerBuilder()
                 .Build();
@@ -112,7 +112,7 @@ namespace ReflexPlus.EditModeTests
         }
 
         [Test]
-        public void ConstructorInjectorOptional()
+        public void ConstructorInjectorOptional_ReturnsNull()
         {
             var container = new ContainerBuilder()
                 .Build();
@@ -122,7 +122,7 @@ namespace ReflexPlus.EditModeTests
         }
         
         [Test]
-        public void ConstructorInjectorParameterWithKey()
+        public void ConstructorInjectorParameterWithKey_ReturnsCorrectValues()
         {
             var container = new ContainerBuilder()
                 .RegisterValue(42)
