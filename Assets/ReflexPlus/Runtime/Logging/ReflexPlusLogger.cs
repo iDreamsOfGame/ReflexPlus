@@ -9,8 +9,6 @@ namespace ReflexPlus.Logging
 
         static ReflexPlusLogger()
         {
-            var reflexSettings = ReflexPlusSettings.Instance;
-            logLevel = reflexSettings.LogLevel;
             Log($"Reflex+ LogLevel set to {logLevel}", LogLevel.Info);
         }
 

@@ -6,6 +6,7 @@ using ReflexPlus.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
+using Object = UnityEngine.Object;
 
 [assembly: AlwaysLinkAssembly] // https://docs.unity3d.com/ScriptReference/Scripting.AlwaysLinkAssemblyAttribute.html
 
@@ -28,7 +29,6 @@ namespace ReflexPlus.Injectors
         {
             ReportReflexDebuggerStatus();
             ResetStaticState();
-            RootContainer = CreateRootContainer();
 
             OnSceneLoaded += InjectScene;
             SceneManager.sceneUnloaded += DisposeScene;
@@ -47,7 +47,7 @@ namespace ReflexPlus.Injectors
 
             void DisposeProject()
             {
-                RootContainer.Dispose();
+                RootContainer?.Dispose();
                 RootContainer = null;
 
                 // Unsubscribe from static events ensuring that Reflex works with domain reloading set to false
@@ -58,6 +58,7 @@ namespace ReflexPlus.Injectors
 
             void InjectScene(Scene scene, ContainerScope containerScope)
             {
+                RootContainer ??= CreateRootContainer();
                 ReflexPlusLogger.Log($"Scene {scene.name} ({scene.GetHashCode()}) loaded", LogLevel.Development);
                 var sceneContainer = CreateSceneContainer(scene, RootContainer, containerScope);
                 ContainersPerScene.Add(scene, sceneContainer);
@@ -67,14 +68,25 @@ namespace ReflexPlus.Injectors
 
         private static Container CreateRootContainer()
         {
-            var reflexSettings = ReflexPlusSettings.Instance;
-            var builder = new ContainerBuilder().SetName("RootContainer");
+            const string builderName = "RootContainer";
+            const string rootScopeName = "RootScope";
+            var builder = new ContainerBuilder().SetName(builderName);
 
-            if (reflexSettings.RootScope)
+            ContainerScope rootScope = null;
+            var rootScopeGameObject = GameObject.Find(rootScopeName);
+            if (rootScopeGameObject)
+                rootScopeGameObject.TryGetComponent(out rootScope);
+
+            if (!rootScope)
             {
-                reflexSettings.RootScope.InstallBindings(builder);
-                ReflexPlusLogger.Log("Root Bindings Installed", LogLevel.Info, reflexSettings.RootScope.gameObject);
+                rootScopeGameObject = new GameObject(rootScopeName);
+                rootScope = rootScopeGameObject.AddComponent<ContainerScope>();
+                rootScope.CanInvokeOnSceneLoadedAction = false;
+                Object.DontDestroyOnLoad(rootScopeGameObject);
             }
+            
+            rootScope.InstallBindings(builder);
+            ReflexPlusLogger.Log("Root Bindings Installed", LogLevel.Info, rootScope.gameObject);
 
             return builder.Build();
         }

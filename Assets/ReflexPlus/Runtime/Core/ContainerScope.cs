@@ -6,9 +6,19 @@ namespace ReflexPlus.Core
 {
     public class ContainerScope : MonoBehaviour
     {
+        [SerializeField]
+        private bool canInvokeOnSceneLoadedAction = true;
+
+        public bool CanInvokeOnSceneLoadedAction
+        {
+            get => canInvokeOnSceneLoadedAction;
+            set => canInvokeOnSceneLoadedAction = value;
+        }
+
         private void Awake()
         {
-            UnityInjector.OnSceneLoaded.Invoke(gameObject.scene, this);
+            if (canInvokeOnSceneLoadedAction)
+                UnityInjector.OnSceneLoaded.Invoke(gameObject.scene, this);
         }
 
         public void InstallBindings(ContainerBuilder containerBuilder)

@@ -123,18 +123,18 @@ namespace ReflexPlus.Core
             return (TContract)Resolve(typeof(TContract), optional, key);
         }
 
-        public object Single(Type type, object key) => Single(type, false, key);
-
-        public object Single(Type type, bool optional = false, object key = null)
-        {
-            return GetResolvers(type, optional, key).Single().Resolve(this);
-        }
-
         public TContract Single<TContract>(object key) => Single<TContract>(false, key);
 
         public TContract Single<TContract>(bool optional = false, object key = null)
         {
             return (TContract)Single(typeof(TContract), optional, key);
+        }
+        
+        public object Single(Type type, object key) => Single(type, false, key);
+
+        public object Single(Type type, bool optional = false, object key = null)
+        {
+            return GetResolvers(type, optional, key).Single().Resolve(this);
         }
 
         public IEnumerable<object> All(Type contract, object key = null)
