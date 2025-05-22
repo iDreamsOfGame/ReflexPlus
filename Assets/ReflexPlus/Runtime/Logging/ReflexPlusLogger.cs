@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ReflexPlus.Logging
 {
-    internal static class ReflexPlusLogger
+    public static class ReflexPlusLogger
     {
         private static LogLevel logLevel;
 
