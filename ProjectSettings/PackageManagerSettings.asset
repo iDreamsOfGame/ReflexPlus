@@ -30,6 +30,7 @@ MonoBehaviour:
     m_Name: package.openupm.com
     m_Url: https://package.openupm.com
     m_Scopes:
+    - com.boundfoxstudios.fluentassertions
     - com.gamesoft.zenject
     - jp.hadashikick.vcontainer
     m_IsDefault: 0

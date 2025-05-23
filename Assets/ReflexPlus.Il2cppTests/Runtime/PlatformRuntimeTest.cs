@@ -1,6 +1,6 @@
 using System;
-using IL2CPPTest.Models;
 using ReflexPlus.Core;
+using ReflexPlus.Il2cppTests.Models;
 using UnityEngine;
 
 namespace ReflexPlus.Il2cppTests

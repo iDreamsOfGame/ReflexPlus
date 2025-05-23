@@ -1,6 +1,6 @@
 using System;
 
-namespace Domain.Generics
+namespace ReflexPlus.Il2cppTests
 {
     internal class RingBuffer<T>
     {

@@ -17,6 +17,7 @@
       "name": "package.openupm.com",
       "url": "https://package.openupm.com",
       "scopes": [
+        "com.boundfoxstudios.fluentassertions",
         "com.gamesoft.zenject",
         "jp.hadashikick.vcontainer"
       ]

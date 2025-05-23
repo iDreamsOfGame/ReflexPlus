@@ -1,4 +1,4 @@
-﻿namespace IL2CPPTest.Models
+﻿namespace ReflexPlus.Il2cppTests.Models
 {
     public interface ITestGenericStructure<T> where T : struct
     {
