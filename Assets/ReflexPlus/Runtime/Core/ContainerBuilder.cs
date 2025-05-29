@@ -15,6 +15,8 @@ namespace ReflexPlus.Core
 
         public Container Parent { get; private set; }
 
+        public Container CreatedContainer { get; private set; }
+
         public List<Binding> Bindings { get; } = new();
 
         public event Action<Container> OnContainerBuilt;
@@ -37,6 +39,15 @@ namespace ReflexPlus.Core
             if (Parent != null)
             {
                 foreach (var (registrationId, resolvers) in Parent.ResolversByContract)
+                {
+                    resolversByContract[registrationId] = new List<IResolver>(resolvers);
+                }
+            }
+            
+            // Inherited resolvers from created container.
+            if (CreatedContainer != null)
+            {
+                foreach (var (registrationId, resolvers) in CreatedContainer.ResolversByContract)
                 {
                     resolversByContract[registrationId] = new List<IResolver>(resolvers);
                 }
@@ -105,6 +116,7 @@ namespace ReflexPlus.Core
 
             Bindings.Clear();
             OnContainerBuilt?.Invoke(container);
+            CreatedContainer = container;
             return container;
         }
 

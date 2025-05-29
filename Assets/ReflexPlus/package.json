@@ -1,7 +1,7 @@
 {
   "name": "io.github.idreamsofgame.reflexplus",
   "displayName": "ReflexPlus",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "unity": "2021.1",
   "description": "Minimal dependency injection framework for Unity based on Reflex framework.",
   "keywords": ["Dependency Injection", "IoC", "DI", "DI Container"],

@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+## [1.0.7] - 2025-05-29
+
+### Changed
+
+- **ContainerBuilder** adds property **CreatedContainer** to hold last created container.
+
+
+
 ## [1.0.6] - 2025-05-23
 
 ### Changed
